@@ -12,6 +12,13 @@ export default defineConfigWithTheme({
   title: "个人博客",
   titleTemplate: 'Blog by xiaofei',
   // description: "23435",
+  markdown: {
+    theme: {
+      light: 'material-theme-lighter',
+      dark: 'material-theme-darker'
+    },
+    lineNumbers: true
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 
@@ -113,6 +120,11 @@ export default defineConfigWithTheme({
     footer: {
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2024-present xiaofei Deng'
+    },
+
+    docFooter: {
+      prev: 'prev',
+      next: 'next'
     }
   }
 })
