@@ -83,7 +83,7 @@ export default defineConfigWithTheme({
         text: '服务端',
         items: [
           { text: 'Node', link: '/server/node' },
-          { text: 'Nginx', link: '/server/react' },
+          { text: 'Nginx', link: '/server/nginx' },
         ]
       },
       { text: '浏览器', link: '/browser' },
