@@ -29,12 +29,12 @@ features:
     link: /frame
   - icon: 📦
     title: 组件库
-    details: Element UI、Ant Design、Vant、Naive UI
-    link: /component-library
+    details: Element UI、Ant Design、Vant UI、Naive UI
+    link: /ui-library
 
   - icon: 🔑
     title: 服务端
-    details: Node、Nginx、Docker
+    details: Node、Nginx
     link: /server
   - icon: 🛠️
     title: 工具

@@ -48,18 +48,46 @@ export default defineConfigWithTheme({
     // 顶部导航
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Examples', link: '/markdown-examples' },
+      {
+        text: '组件库',
+        items: [
+          { text: 'Element UI', link: '/ui-library/element-ui' },
+          { text: 'Ant Design', link: '/ui-library/ant-design' },
+          { text: 'Vant UI', link: '/ui-library/vant-ui' },
+          { text: 'Naive UI', link: '/ui-library/naive-ui' },
+        ],
+      },
     ],
 
     // 侧边导航
     sidebar: [
       {
-        text: 'Examples',
+        text: '基础',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'HTML', link: '/basic/html' },
+          { text: 'CSS', link: '/basic/css' },
+          { text: 'JavaScript', link: '/basic/javascript' },
+          { text: 'TypeScript', link: '/basic/typescript' },
         ]
-      }
+      },
+      {
+        text: '框架',
+        items: [
+          { text: 'Vue', link: '/frame/vue' },
+          { text: 'React', link: '/frame/react' },
+          { text: 'Angular', link: '/frame/angular' },
+        ]
+      },
+      {
+        text: '服务端',
+        items: [
+          { text: 'Node', link: '/server/node' },
+          { text: 'Nginx', link: '/server/react' },
+        ]
+      },
+      { text: '浏览器', link: '/browser' },
+      { text: '网络', link: '/network' },
     ],
 
     // 社交链接
