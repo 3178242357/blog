@@ -135,9 +135,9 @@ titleTemplate: basic
 
 ::: info 示例
   ```html
-  <img src="https://www.baidu.com/img/flexible/logo/pc/result.png" alt="百度logo" width="100" height="100">
+  <img src="https://codecompass.cn/background.png" alt="百度logo" width="100" height="100">
   ```
-  <img src="https://www.baidu.com/img/flexible/logo/pc/result.png" alt="百度logo" width="100" height="100">
+  <img src="https://codecompass.cn/background.png" alt="百度logo" width="100" height="100">
 
 :::
 
