@@ -125,6 +125,8 @@ export default defineConfigWithTheme({
     docFooter: {
       prev: 'prev',
       next: 'next'
-    }
-  }
+    },
+
+    outline: [2, 4]
+  },
 })
