@@ -423,13 +423,13 @@ titleTemplate: basic
 ```html {4}
 <form oninput="result.value=parseInt(a.value)+parseInt(b.value)">
   0<input type="range" id="a" value="50">100
-  +<input type="number" id="b" value="50">=
+  +<input type="number" id="b" value="50" readonly>=
   <output name="result" for="a b"></output>
 </form>
 ```
 <form style="display: flex; align-items: center;" oninput="result.value=parseInt(a.value)+parseInt(b.value)">
-  0<input class="input" type="range" id="a" value="50">100
-  +<input class="input" type="number" id="b" value="50">=
+  0<input class="output-range" type="range" id="a" value="50">100
+  +<input class="output-number input" type="number" id="b" value="50" readonly>=
   <output name="result" for="a b"></output>
 </form>
 :::
@@ -738,6 +738,10 @@ var ws = new WebSocket(url, [protocol]); // url: 指定连接的 URL  protocol: 
     border-radius: 5px;
     padding: 5px;
     margin: 5px;
+  }
+
+  .output-number {
+    max-width: 50px;
   }
 </style>
 
