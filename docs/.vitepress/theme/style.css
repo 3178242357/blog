@@ -43,6 +43,15 @@
  *   in custom container, badges, etc.
  * -------------------------------------------------------------------------- */
 
+@import url('https://cdn.jsdelivr.net/npm/lxgw-wenkai-lite-webfont@1.6.0/style.min.css');
+
+:root {
+	--vp-font-family-base: 'LXGW WenKai Lite', 'Inter var experimental', 'Inter var', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+		'Droid Sans', 'Helvetica Neue', sans-serif;
+	--vp-font-family-mono: 'LXGW WenKai Lite', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+
 :root {
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);
