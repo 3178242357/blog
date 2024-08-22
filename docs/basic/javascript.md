@@ -1559,3 +1559,626 @@ console.log(MyClass2.name); // 输出: "MyClass"
     - `static` 关键字：静态方法，可以直接通过类名调用，不需要实例化对象。
     - `extends` 关键字：用于创建子类，子类可以继承父类的属性和方法。
     - `super` 关键字：用于调用父类的方法。
+
+- 类继承
+  > JavaScript 类继承使用 `extends` 关键字。<br>
+  > 子类可以继承父类的属性和方法，也可以添加自己的属性和方法。<br>
+  > 子类可以调用父类的构造函数，通过 `super()` 方法调用父类的构造函数，并传入子类构造函数的参数。<br>
+  > 当创建一个类时，您不需要重新编写新的数据成员和成员函数，只需指定新建的类继承了一个已有的类的成员即可。这个已有的类称为**基类（父类）**，新建的类称为**派生类（子类）**。
+
+  ```javascript
+  // 基类
+  class Animal {
+      // eat() 函数
+      // sleep() 函数
+  };
+
+  //派生类
+  class Dog extends Animal {
+      // bark() 函数
+  };
+  ```
+
+  ES6 引入了类和 `class` 关键字，但底层机制仍然基于**原型继承**。
+
+  ```javascript
+  function Animal(name) {
+    this.name = name;
+  }
+  
+  Animal.prototype.eat = function() {
+    console.log(this.name + " is eating.");
+  };
+  
+  function Dog(name, breed) {
+    Animal.call(this, name);
+    this.breed = breed;
+  }
+  
+  // 建立原型链，让 Dog 继承 Animal
+  Dog.prototype = Object.create(Animal.prototype);
+  Dog.prototype.constructor = Dog;
+  
+  Dog.prototype.bark = function() {
+    console.log(this.name + " is barking.");
+  };
+  
+  var dog = new Dog("Buddy", "Labrador");
+  dog.eat();  // 调用从 Animal 继承的方法
+  dog.bark(); // 调用 Dog 的方法
+  ```
+
+  使用 ES6 类继承
+
+  ```javascript
+  class Animal {
+    constructor(name) {
+      this.name = name;
+    }
+  
+    eat() {
+      console.log(this.name + " is eating.");
+    }
+  }
+  
+  class Dog extends Animal {
+    constructor(name, breed) {
+      super(name);
+      this.breed = breed;
+    }
+  
+    bark() {
+      console.log(this.name + " is barking.");
+    }
+  }
+  
+  const dog = new Dog("Buddy", "Labrador");
+  dog.eat();
+  dog.bark();
+  ```
+
+- getter 和 setter
+  > 类中我们可以使用 `getter` 和 `setter` 来获取和设置值，`getter` 和 `setter` 都需要在严格模式下执行。<br>
+  > 在 JavaScript 中，可以使用 `get` 和 `set` 关键字来定义对象的属性，这两个关键字被称为**存取器（accessor）**。
+
+  ```javascript
+  class Dog {
+    constructor(name) {
+      this.sitename = name;
+    }
+    get s_name() {
+      return this.sitename;
+    }
+    set s_name(x) {
+      this.sitename = x;
+    }
+  }
+
+  let dog = new Dog("旺财");
+  console.log(dog.s_name);   // 输出: "旺财"
+  ```
+
+  **注意：**即使 `getter/setter` 是一个方法，当你想获取属性值或设置属性值也不要使用**括号**。`getter/setter` 方法的名称不能与属性的名称相同。很多开发者在属性名称前使用下划线字符 `_` 将 `getter/setter` 与实际属性分开：
+
+  ```javascript
+  class Dog {
+    constructor(name) {
+      this._name = name;
+    }
+    get name() {
+      return this._name;
+    }
+    set name(x) {
+      this._name = x;
+    }
+  }
+
+  let dog = new Dog("旺财");
+  console.log(dog.name);   // 输出: "旺财"
+  ```
+
+- 静态方法
+  > 静态方法是使用 `static` 关键字修饰的方法，又叫类方法，属于类的，但不属于对象，在实例化对象之前可以通过 `类名.方法名` 调用静态方法。<br>
+  > 静态方法不能在对象上调用，只能在类中调用
+
+  ```javascript
+  class Dog {
+    constructor(name) {
+      this.name = name;
+    }
+    static sayHello() {
+      console.log("Hello, I am a dog.");
+    }
+  }
+
+  Dog.sayHello(); // 输出: "Hello, I am a dog."
+
+  let dog = new Dog();
+  dog.sayHello(); // 报错: TypeError: dog.sayHello is not a function
+  ```
+
+  如果想在对象 dog 中使用静态方法，可以作为一个参数传递给它:
+
+  ```javascript
+
+  class Dog {
+    constructor(name) {
+      this.name = name;
+    }
+    static sayHello(obj) {
+      console.log(`Hello, I am a dog. My name is ${obj.name}.`);
+    }
+  }
+
+  let dog = new Dog("旺财");
+  Dog.sayHello(dog); // 输出: "Hello, I am a dog. My name is 旺财."
+  ```
+
+- 提升
+  > 函数声明和类声明之间的一个重要区别在于, 函数声明会提升，类声明不会。
+
+  ```javascript
+  // 这里不能这样使用类，因为还没有声明
+  // dog = new Dog("哈士奇")
+  // 报错
+  
+  class Dog {
+    constructor(name) {
+      this.sitename = name;
+    }
+  }
+  
+  // 这里可以使用类了
+  let dog = new Dog("哈士奇")
+  ```
+
+
+### 继承方式
+
+1. 原型链继承
+  - 实现:
+    > 将子类的原型设置为父类的一个实例。<br>
+    > 子类可以访问父类的原型上的方法和属性。
+  - 优点:
+    > 简单易懂。<br>
+    > 可以复用父类的方法。
+  - 缺点:
+    > 每次创建子类的实例时，父类的构造函数都会被执行一次，即使这些属性在所有实例中都是相同的。<br>
+    > 父类构造函数中定义的属性会被所有子类实例共享。<br>
+    > 不能向父类构造函数传递参数。
+  - 代码:
+    ```javascript{11}
+    function Parent() {
+      this.name = 'Alice';
+    }
+
+    Parent.prototype.sayHello = function() {
+      console.log(`Hello, my name is ${this.name}!`);
+    };
+
+    function Child() {}
+
+    Child.prototype = new Parent(); // 设置 Child 的原型为 Parent 的实例
+
+    const child = new Child();
+    child.sayHello(); // 输出: Hello, my name is Alice!
+    ```
+2. 构造函数继承
+  - 实现:
+    > 在子类构造函数内部使用 `call` 或 `apply` 方法调用父类构造函数。<br>
+    > 可以在子类构造函数中定义自己的属性。
+  - 优点:
+    > 可以为子类实例创建独立的属性副本。<br>
+    > 可以向父类构造函数传递参数。
+  - 缺点:
+    > 只能继承属性，不能继承方法。<br>
+    > 需要手动设置原型来继承方法。
+  - 代码:
+    ```javascript{6}
+    function Parent() {
+      this.name = 'Alice';
+    }
+
+    function Child() {
+      Parent.call(this); // 在 Child 构造函数内部调用 Parent 构造函数
+    }
+
+    const child = new Child();
+    console.log(child.name); // 输出: Alice
+    ```
+3. 组合继承（经典继承）
+  - 实现:
+    > 结合原型链继承和构造函数继承的优点。<br>
+    > 使用 `call` 或 `apply` 方法调用父类构造函数以继承属性。<br>
+    > 将子类的原型设置为父类的一个实例以继承方法。
+  - 优点:
+    > 可以继承属性和方法。<br>
+    > 可以向父类构造函数传递参数。
+  - 缺点:
+    > 父类构造函数会被调用两次（一次在构造函数继承中，一次在原型链继承中）。
+  - 代码:
+    ```javascript{10,14,15}
+    function Parent(name) {
+      this.name = name;
+    }
+
+    Parent.prototype.sayHello = function() {
+      console.log(`Hello, my name is ${this.name}!`);
+    };
+
+    function Child(name, age) {
+      Parent.call(this, name); // 调用父类构造函数
+      this.age = age;
+    }
+
+    Child.prototype = Object.create(Parent.prototype); // 设置原型链
+    Child.prototype.constructor = Child; // 设置构造函数
+
+    Child.prototype.sayAge = function() {
+      console.log(`I am ${this.age} years old.`);
+    };
+
+    const child = new Child('Bob', 2);
+    child.sayHello(); // 输出: Hello, my name is Bob!
+    child.sayAge(); // 输出: I am 2 years old.
+    ```
+4. 寄生式继承
+  - 实现:
+    > 创建一个仅用于继承目的的函数，该函数会在创建新对象的同时增强（或“寄生”）新对象。
+  - 优点:
+    > 无需构造函数: 寄生式继承不需要使用构造函数，因此可以避免构造函数的开销。<br>
+    > 不使用原型链: 不依赖于原型链，这意味着新对象不会影响原始对象的原型链。<br>
+    > 易于控制: 你可以完全控制新对象的创建过程，包括添加哪些属性或方法。<br>
+    > 灵活: 你可以根据需要添加任意数量的新属性或方法，而不受构造函数或原型链的限制。
+  - 缺点:
+    > 不适用于类继承: 寄生式继承主要用于创建单一对象的继承，而不是类级别的继承。<br>
+    > 缺乏结构: 与构造函数或类继承相比，寄生式继承缺乏一定的结构和组织性。<br>
+    > 不直观: 对于习惯于使用构造函数或类继承的开发者来说，寄生式继承可能不太直观。
+  - 代码:
+    ```javascript{1-12,25}
+    function createAnother(original) {
+      // 1. 创建新对象
+      const clone = Object.create(original);
+
+      // 2. 增强新对象
+      clone.sayGoodbye = function() {
+        console.log("Goodbye!");
+      };
+
+      // 3. 返回新对象
+      return clone;
+    }
+
+    function Parent(name) {
+      this.name = name;
+    }
+
+    Parent.prototype.sayHello = function() {
+      console.log(`Hello, my name is ${this.name}!`);
+    };
+
+    const parent = new Parent('Alice');
+
+    // 使用寄生式继承创建新对象
+    const child = createAnother(parent);
+
+    child.sayHello(); // 输出: Hello, my name is Alice!
+    child.sayGoodbye(); // 输出: Goodbye!
+    ```
+5. 寄生组合继承
+  - 实现:
+    > 改进组合继承，避免父类构造函数被调用两次。<br>
+    > 使用 Object.create 创建一个新的对象，该对象继承自父类的原型，然后将其作为子类的原型。
+  - 优点:
+    > 避免了父类构造函数被调用两次的问题。<br>
+    > 可以继承属性和方法。<br>
+    > 可以向父类构造函数传递参数。
+  - 缺点:
+    > 实现稍微复杂一些。
+  - 代码:
+    ```javascript{1-5,16,19}
+    function createPrototype(parentPrototype) {
+      const prototype = Object.create(parentPrototype);
+      prototype.constructor = this;
+      return prototype;
+    }
+
+    function Parent() {
+      this.name = 'Alice';
+    }
+
+    Parent.prototype.sayHello = function() {
+      console.log(`Hello, my name is ${this.name}!`);
+    };
+
+    function Child() {
+      Parent.call(this); // 构造函数继承
+    }
+
+    Child.prototype = createPrototype(Parent.prototype); // 使用 createPrototype 函数创建新的原型
+
+    const child = new Child();
+    child.sayHello(); // 输出: Hello, my name is Alice!
+    ```
+5. ES6 类继承
+  - 实现:
+    > 使用 class 和 extends 关键字实现继承。<br>
+    > 使用 super 关键字调用父类构造函数。
+  - 优点:
+    > 语法简洁。<br>
+    > 易于理解和维护。<br>
+    > 支持新的特性，如静态方法、类字段等。
+  - 缺点:
+    > 仅在支持ES6的环境中可用。
+    > 在旧版本浏览器中需要使用转译工具（如Babel）。
+  - 代码:
+    ```javascript
+    class Parent {
+      constructor() {
+        this.name = 'Alice';
+      }
+
+      sayHello() {
+        console.log(`Hello, my name is ${this.name}!`);
+      }
+    }
+
+    class Child extends Parent {}
+
+    const child = new Child();
+    child.sayHello(); // 输出: Hello, my name is Alice!
+    ```
+
+
+### Promise
+1. 基本概念
+  - `Promise` 是异步编程的一种解决方案，它代表了一个异步操作的最终完成或失败。
+  - Promise 的三种状态：
+    - `Pending（等待）`：初始状态，既不是成功也不是失败状态。
+    - `Fulfilled（已完成）`：操作成功完成。
+    - `Rejected（已失败）`：操作失败。
+  - Promise 的状态变化：
+    - 一旦 Promise 的状态变为 `fulfilled` 或 `rejected`，这个状态就不会再改变
+    - Promise 只能从 `pending -> fulfilled` 或 `pending -> rejected`。
+  
+2. 基本用法
+  - 创建 Promise 对象
+    ```javascript
+    const promise = new Promise(function(resolve, reject) {
+      // 异步操作成功时调用 resolve
+      // 异步操作失败时调用 reject
+    });
+    ```
+  - 链式调用
+    ```javascript
+      promise.then(function(value) {
+        // 成功时调用
+        return value;
+      }, function(error) {
+        // 失败时调用
+        return error;
+      }).then(function(value) {
+        // 成功时调用的回调函数
+      }, function(error) {
+        // 失败时调用的回调函数
+      });
+    ```
+  - 错误处理
+    ```javascript
+    promise.catch(function(error) {
+      // 捕获错误
+    });
+    ```
+  - 示例
+    ```javascript
+    const promise = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        resolve('成功');
+      }, 1000);
+    });
+
+    promise.then(function(value) {
+      console.log(value); // 输出: 成功
+    });
+
+    promise.catch(function(error) {
+      console.log(error); // 不会被调用
+    });
+    ```
+    
+3. 高级用法
+  - 静态方法
+    - `Promise.resolve()`：将现有对象转为 Promise 对象。
+      ```javascript
+      Promise.resolve("Success").then(
+        (value) => {
+          console.log(value); // "Success"
+        },
+        (reason) => {
+          // not called
+        },
+      );
+      ```
+
+    - `Promise.reject()`：返回一个失败的 Promise 对象。
+      ```javascript
+      Promise.reject(new Error("fail")).then(
+        () => {
+          // not called
+        },
+        (error) => {
+          console.error(error); // Stacktrace
+        },
+      );
+      ```
+
+    - `Promise.all()`：用于将多个 Promise 实例，包装成一个新的 Promise 实例。该 Promise 在所有给定的 Promise 都`fulfilled` 时 `fulfilled`，或在任何一个 Promise `rejected` 时 `rejected`。
+      ```javascript
+      const p1 = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("p1");
+        }, 1000);
+      });
+      const p2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // resolve("p2");
+          reject(new Error("p2"));
+        }, 500);
+      });
+      const p3 = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("p3");
+        }, 1500);
+      });
+
+      Promise.all([p1, p2, p3]).then(
+        (values) => {
+          console.log(values); // ["p1", "p2", "p3"]
+        },
+        (error) => {
+          console.error(error); // Error: p2
+        },
+      );
+      ```
+
+    - `Promise.race()`：用于将多个 Promise 实例，包装成一个新的 Promise 实例，用于等待一组 Promise 中的第一个完成（无论是 `fulfilled` 还是 `rejected` ），并返回那个 Promise。
+      ```javascript
+      function sleep(time, value, state) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            if (state === "fulfill") {
+              return resolve(value);
+            } else {
+              return reject(new Error(value));
+            }
+          }, time);
+        });
+      }
+
+      const p1 = sleep(500, "one", "fulfill");
+      const p2 = sleep(100, "two", "fulfill");
+
+      Promise.race([p1, p2]).then((value) => {
+        console.log(value); // "two"
+        // 两者都满足，但 p2 更快
+      });
+
+      const p3 = sleep(100, "three", "fulfill");
+      const p4 = sleep(500, "four", "reject");
+
+      Promise.race([p3, p4]).then(
+        (value) => {
+          console.log(value); // "three"
+          // P3 更快，因此它满足
+        },
+        (error) => {
+          // Not called
+        },
+      );
+
+      const p5 = sleep(500, "five", "fulfill");
+      const p6 = sleep(100, "six", "reject");
+
+      Promise.race([p5, p6]).then(
+        (value) => {
+          // Not called
+        },
+        (error) => {
+          console.error(error.message); // "six"
+          // P6 更快，因此它会拒绝
+        },
+      );
+      ```
+
+    - `Promise.any()`：用于将多个 Promise 实例，包装成一个新的 Promise 实例。用于等待多个 Promise 中的任意一个或多个 `fulfilled` ，并返回第一个 `fulfilled` 的 Promise。如果所有的 Promise 都失败，则返回一个 `rejected` 的 Promise，并且会抛出一个 AggregateError，该错误包含了所有失败的 Promise 的原因。
+      ```javascript
+      const pErr = new Promise((resolve, reject) => {
+        reject("Always fails");
+      });
+
+      const pSlow = new Promise((resolve, reject) => {
+        setTimeout(resolve, 500, "Done eventually");
+      });
+
+      const pFast = new Promise((resolve, reject) => {
+        setTimeout(resolve, 100, "Done quick");
+      });
+
+      Promise.any([pErr, pSlow, pFast]).then((value) => {
+        // pFast首先实现
+        console.log(value); // Done quick
+      });
+      ```
+
+  - 实例方法
+    - `Promise.prototype.then()`：添加成功和失败回调函数。
+      ```javascript
+      const p1 = new Promise((resolve, reject) => {
+        resolve("Success!");
+        // or
+        // reject(new Error("Error!"));
+      });
+
+      p1.then(
+        (value) => {
+          console.log(value); // Success!
+        },
+        (reason) => {
+          console.error(reason); // Error!
+        },
+      );
+      ```
+
+    - `Promise.prototype.catch()`：添加一个失败回调函数。
+      ```javascript
+      const p1 = new Promise((resolve, reject) => {
+        resolve("Success");
+      });
+
+      p1.then((value) => {
+        console.log(value); // "Success!"
+        throw new Error("oh, no!");
+      })
+        .catch((e) => {
+          console.error(e.message); // "oh, no!"
+        })
+        .then(
+          () => console.log("捕获后，链条恢复"), // 捕获后，链条恢复
+          () => console.log("由于捕获而未被解雇"),
+        );
+
+      // 以下行为与上述相同
+      p1.then((value) => {
+        console.log(value); // "Success!"
+        return Promise.reject("oh, no!");
+      })
+        .catch((e) => {
+          console.error(e); // "oh, no!"
+        })
+        .then(
+          () => console.log("捕获后，链条恢复"), // 捕获后，链条恢复
+          () => console.log("由于捕获而未被解雇"),
+        );
+      ```
+
+    - `Promise.prototype.finally()`：添加一个最终的回调函数，无论 Promise 成功或失败都会执行。
+      ```javascript
+      const p1 = new Promise((resolve, reject) => {
+        resolve("Success");
+      });
+
+      p1.then((value) => {
+        console.log(value); // "Success"
+        return "oh, no!";
+      })
+        .finally(() => {
+          console.log("Promise 结束"); // Promise 结束
+        })
+        .then(
+          (value) => console.log(value), // "oh, no!"
+          (error) => console.error(error),
+        );
+      ```
+
+
+
