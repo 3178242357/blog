@@ -2181,4 +2181,747 @@ console.log(MyClass2.name); // 输出: "MyClass"
       ```
 
 
+## ES6
 
+### 解构赋值
+
+1. 数组模型的解构（Array）
+  
+  - 基本：
+  ```javascript
+  let [a, b, c] = [1, 2, 3];
+  // a = 1
+  // b = 2
+  // c = 3
+  ```
+
+  - 可嵌套：
+  ```javascript
+  let [a, [[b], c]] = [1, [[2], 3]];
+  // a = 1
+  // b = 2
+  // c = 3
+  ```
+
+  - 可忽略：
+  ```javascript
+  let [a, , b] = [1, 2, 3];
+  // a = 1
+  // b = 3
+  ```
+
+  - 不完全解构：
+  ```javascript
+  let [a = 1, b] = []; // a = 1, b = undefined
+  ```
+
+  - 剩余运算符：
+  ```javascript
+  let [a, ...b] = [1, 2, 3];
+  //a = 1
+  //b = [2, 3]
+  ```
+
+  - 字符串等:
+  > 在数组的解构中，解构的目标若为可遍历对象，皆可进行解构赋值。可遍历对象即实现 `Iterator` 接口的数据。
+  ```javascript
+  let [a, b, c, d, e] = 'hello';
+  // a = 'h'
+  // b = 'e'
+  // c = 'l'
+  // d = 'l'
+  // e = 'o'
+  ```
+
+  - 解构默认值：
+  ```javascript
+  let [a = 2] = [undefined]; // a = 2
+  ```
+  当解构模式有匹配结果，且匹配结果是 undefined 时，会触发默认值作为返回结果。
+  ```javascript
+  let [a = 3, b = a] = [];     // a = 3, b = 3
+  let [a = 3, b = a] = [1];    // a = 1, b = 1
+  let [a = 3, b = a] = [1, 2]; // a = 1, b = 2
+  ```
+
+2. 对象模型的解构（Object）
+  
+  - 基本：
+  ```javascript
+  let { foo, bar } = { foo: 'aaa', bar: 'bbb' };
+  // foo = 'aaa'
+  // bar = 'bbb'
+  
+  let { baz : foo } = { baz : 'ddd' };
+  // foo = 'ddd'
+  ```
+
+  - 可嵌套可忽略：
+  ```javascript
+  let obj = {p: ['hello', {y: 'world'}] };
+  let {p: [x, { y }] } = obj;
+  // x = 'hello'
+  // y = 'world'
+
+  let obj = {p: ['hello', {y: 'world'}] };
+  let {p: [x, {  }] } = obj;
+  // x = 'hello'
+  ```
+
+  - 不完全解构：
+  ```javascript
+  let obj = {p: [{y: 'world'}] };
+  let {p: [{ y }, x ] } = obj;
+  // x = undefined
+  // y = 'world'
+  ```
+
+  - 剩余运算符：
+  ```javascript
+  let {a, b, ...rest} = {a: 10, b: 20, c: 30, d: 40};
+  // a = 10
+  // b = 20
+  // rest = {c: 30, d: 40}
+  ```
+
+  - 解构默认值：
+  ```javascript
+  let {a = 10, b = 5} = {a: 3};
+  // a = 3; b = 5;
+  let {a: aa = 10, b: bb = 5} = {a: 3};
+  // aa = 3; bb = 5;
+  ```
+ 
+### Symbol
+ES6 引入了一种新的原始数据类型 Symbol ，表示独一无二的值，最大的用法是用来定义对象的唯一属性名。
+
+- 基本用法：
+> Symbol 函数栈不能用 `new` 命令，因为 Symbol 是原始数据类型，不是对象。可以接受一个字符串作为参数，为新创建的 Symbol 提供描述，用来显示在控制台或者作为字符串的时候使用，便于区分。
+
+```javascript
+let sy = Symbol("KK");
+console.log(sy);   // Symbol(KK)
+typeof(sy);        // "symbol"
+ 
+// 相同参数 Symbol() 返回的值不相等
+let sy1 = Symbol("kk"); 
+sy === sy1;       // false
+```
+
+- 使用场景：
+    - 作为对象的属性名：
+
+    ```javascript
+    let sy = Symbol("key1");
+ 
+    // 写法1
+    let syObject = {};
+    syObject[sy] = "kk";
+    console.log(syObject);    // {Symbol(key1): "kk"}
+    
+    // 写法2
+    let syObject = {
+      [sy]: "kk"
+    };
+    console.log(syObject);    // {Symbol(key1): "kk"}
+    
+    // 写法3
+    let syObject = {};
+    Object.defineProperty(syObject, sy, {value: "kk"});
+    console.log(syObject);   // {Symbol(key1): "kk"}
+    ```
+    **注意点：**
+    > Symbol 作为对象属性名时不能用.运算符，要用方括号。因为.运算符后面是字符串，所以取到的是字符串 sy 属性，而不是 Symbol 值 sy 属性。<br>
+    > Symbol 值作为属性名时，该属性是公有属性不是私有属性，可以在类的外部访问。<br>
+    > 不会出现在 `for...in` 、 `for...of` 的循环中，也不会被 `Object.keys()` 、 `Object.getOwnPropertyNames()` 返回。<br>
+    > 要读取到一个对象的 Symbol 属性，可以通过 `Object.getOwnPropertySymbols()` 和 `Reflect.ownKeys()` 取到。
+
+    ```javascript
+    // 1.不能用.运算符
+    let syObject = {};
+    syObject[sy] = "kk";
+    
+    syObject[sy];  // "kk"
+    syObject.sy;   // undefined
+
+
+    // 2.读取到一个对象的 Symbol 属性
+    let syObject = {};
+    syObject[sy] = "kk";
+    console.log(syObject);
+    
+    for (let i in syObject) {
+      console.log(i);
+    }    // 无输出
+    
+    Object.keys(syObject);                     // []
+    Object.getOwnPropertySymbols(syObject);    // [Symbol(key1)]
+    Reflect.ownKeys(syObject);                 // [Symbol(key1)]
+    ```
+
+    - 定义常量：
+    ```javascript
+
+    const MY_CONST = Symbol();
+    const obj = {
+      [MY_CONST]: "kk"
+    };
+    console.log(obj[MY_CONST]);   // "kk"
+    ```
+
+- `Symbol.for()` 和 `Symbol.keyFor()`：
+    - `Symbol.for()`：全局注册 Symbol，可以重复调用，返回同一个 Symbol。
+    ```javascript
+    let yellow = Symbol("Yellow");
+    let yellow1 = Symbol.for("Yellow");
+    yellow === yellow1;      // false
+    
+    let yellow2 = Symbol.for("Yellow");
+    yellow1 === yellow2;     // true
+    ```
+
+    - `Symbol.keyFor()`：返回已注册的 Symbol 类型值的 `key`。
+    ```javascript
+    let yellow1 = Symbol.for("Yellow");
+    let key = Symbol.keyFor(yellow1);    
+    console.log(key);    // "Yellow"
+    ```
+
+### Map 与 Set
+
+1. Map对象
+  > Map 对象保存键值对。任何值(对象或者原始值) 都可以作为一个键或一个值。
+
+  Maps 和 Objects 的区别：
+  - 一个 Object 的键只能是字符串或者 Symbols，但一个 Map 的键可以是任意值。
+  - Map 中的键值是有序的（FIFO 原则），而添加到对象中的键则不是。
+  - Map 的键值对个数可以从 size 属性获取，而 Object 的键值对个数只能手动计算。
+  - Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突。
+
+  ![Maps & Objects](/maps&objects.png)
+
+  - Map 中的 key
+    - key 是字符串：
+    ```javascript
+    let map = new Map();
+    map.set("key1", "value1");
+    console.log(map.get("key1"));    // "value1"
+    ```
+    
+    - key 是 Symbol：
+    ```javascript
+    let key = Symbol("key");
+    let map = new Map();
+    map.set(key, "value");
+    console.log(map.get(key));    // "value"
+    ```
+    
+    - key 是对象：
+    ```javascript
+    let obj = {name: "John"};
+    let map = new Map();
+    map.set(obj, "value");
+    console.log(map.get(obj));    // "value"
+    ```
+    
+    - key 都可以是任意值：
+    ```javascript
+    let map = new Map();
+    map.set(1, "value1");
+    map.set(true, "value2");
+    map.set(null, "value3");
+    console.log(map.get(1));    // "value1"
+    console.log(map.get(true));    // "value2"
+    console.log(map.get(null));    // "value3"
+    ```
+  
+  - Map 的迭代
+    - `for...of` 循环：
+    ```javascript
+    let map = new Map([
+      [1, "value1"],
+      [2, "value2"],
+      [3, "value3"]
+    ]);
+    for (let [key, value] of map) {
+      console.log(key + " : " + value);
+    }
+    ```
+
+    - `forEach()` 方法：
+    ```javascript
+    let map = new Map([
+      [1, "value1"],
+      [2, "value2"],
+      [3, "value3"]
+    ]);
+
+    map.forEach(function(value, key) {
+      console.log(key + " : " + value);
+    });
+    ```
+  
+  - Map 对象的操作
+    - Map 与 Array的转换
+    ```javascript
+    var kvArray = [["key1", "value1"], ["key2", "value2"]];
+ 
+    // Map 构造函数可以将一个 二维 键值对数组转换成一个 Map 对象
+    var myMap = new Map(kvArray);
+    
+    // 使用 Array.from 函数可以将一个 Map 对象转换成一个二维键值对数组
+    var outArray = Array.from(myMap);
+    ```
+
+    - Map 的克隆
+    ```javascript
+    let map1 = new Map([
+      [1, "value1"],
+      [2, "value2"],
+      [3, "value3"]
+    ]);
+
+    let map2 = new Map(map1);
+    console.log(map2.get(2));    // "value2"
+    console.log(map1 === map2);    // false
+    ```
+
+    - Map 的合并
+    ```javascript
+    let map1 = new Map([
+      [1, "value1"],
+      [2, "value2"]
+    ]);
+
+    let map2 = new Map([
+      [2, "value22"],
+      [3, "value3"]
+    ]);
+
+    let map3 = new Map([...map1,...map2]);
+    console.log(map3.get(2));    // "value22"  合并两个 Map 对象时，如果有重复的键值，则后面的会覆盖前面的
+    console.log(map3.get(3));    // "value3"
+    ```
+
+2. Set 对象
+> Set 对象允许你存储任何类型的唯一值，无论是原始值或者是对象引用。
+
+  Set 中的特殊值：
+  - `+0` 与 `-0` 在存储判断唯一性的时候是恒等的，所以不重复；
+  - `undefined` 与 `undefined` 是恒等的，所以不重复；
+  - `NaN` 与 `NaN` 是不恒等的，但是在 Set 中只能存一个，不重复。
+
+  ```javascript
+  let set = new Set();
+  
+  let mySet = new Set();
+ 
+  mySet.add(1);             // Set(1) {1}
+  mySet.add(5);             // Set(2) {1, 5}
+  mySet.add(5);             // Set(2) {1, 5} 这里体现了值的唯一性
+  mySet.add("some text");   // Set(3) {1, 5, "some text"} 这里体现了类型的多样性
+
+  var o = {a: 1, b: 2}; 
+  mySet.add(o);
+  mySet.add({a: 1, b: 2});  
+  // Set(5) {1, 5, "some text", {…}, {…}} 这里体现了对象之间引用不同不恒等，即使值相同，Set 也能存储
+  ```
+
+  - 类型转换
+    ```javascript
+    // Array 转 Set
+    var mySet = new Set(["value1", "value2", "value3"]);
+    // 用...操作符，将 Set 转 Array
+    var myArray = [...mySet];
+
+    // String 转 Set
+    var mySet = new Set('hello');  // Set(4) {"h", "e", "l", "o"}
+    // 注：Set 中 toString 方法是不能将 Set 转换成 String
+    ```
+
+  - Set 对象作用
+    - 数组去重:
+    ```javascript
+    let arr = [1, 2, 3, 2, 1, 4, 5, 4];
+    let set = new Set(arr);
+    let newArr = [...set];
+    console.log(newArr);    // [1, 2, 3, 4, 5]
+    ```
+  
+    - 并集
+    ```javascript
+    let set1 = new Set([1, 2, 3]);
+    let set2 = new Set([4, 3, 5]);
+    let unionSet = new Set([...set1,...set2]);
+    console.log(unionSet);    // Set(5) {1, 2, 3, 4, 5}
+    ```
+
+    - 交集
+    ```javascript
+    let set1 = new Set([1, 2, 3]);
+    let set2 = new Set([2, 3, 4]);
+    let intersectionSet = new Set([...set1].filter(x => set2.has(x)));
+    console.log(intersectionSet);    // Set(2) {2, 3}
+    ```
+
+    - 差集
+    ```javascript
+    let set1 = new Set([1, 2, 3]);
+    let set2 = new Set([2, 3, 4]);
+    let differenceSet = new Set([...set1].filter(x => !set2.has(x)));
+    console.log(differenceSet);    // Set(1) {1}
+    ```
+
+### 模块
+
+ES6 的模块化分为导出（export） 与导入（import）两个模块。
+
+特点:
+- ES6 的模块自动开启严格模式，不管你有没有在模块头部加上 use strict;。
+- 模块中可以导入和导出各种类型的变量，如函数，对象，字符串，数字，布尔值，类等。
+- 每个模块都有自己的上下文，每一个模块内声明的变量都是局部变量，不会污染全局作用域。
+- 每一个模块只加载一次（是单例的）， 若再去加载同目录下同文件，直接从内存中读取。
+
+#### export 与 import
+
+1. 基本用法:
+  - 模块导入导出各种类型的变量，如字符串，数值，函数，类。
+  - 导出的函数声明与类声明必须要有名称（`export default` 命令另外考虑）。 
+  - 不仅能导出声明还能导出引用（例如函数）。
+  - `export` 命令可以出现在模块的任何位置，但必需处于模块顶层。
+  - `import` 命令会提升到整个模块的头部，首先执行。
+
+  ```javascript
+  /*-----export [test.js]-----*/
+  let myName = "Tom";
+  let myAge = 20;
+  let myfn = function(){
+      return "My name is" + myName + "! I'm '" + myAge + "years old."
+  }
+  let myClass =  class myClass {
+      static a = "yeah!";
+  }
+  export { myName, myAge, myfn, myClass }
+  
+  /*-----import [xxx.js]-----*/
+  import { myName, myAge, myfn, myClass } from "./test.js";
+  console.log(myfn());// My name is Tom! I'm 20 years old.
+  console.log(myAge);// 20
+  console.log(myName);// Tom
+  console.log(myClass.a );// yeah!
+  ```
+
+2. as 的用法
+  - `as` 关键字可以给导入的变量指定别名。
+
+  ```javascript
+  /*-----export [test.js]-----*/
+  let myName = "Tom";
+  export { myName as exportName }
+  
+  /*-----import [xxx.js]-----*/
+  import { exportName } from "./test.js";
+  console.log(exportName);// Tom
+
+
+
+  // 使用 as 重新定义导出的接口名称，隐藏模块内部的变量
+  /*-----export [test1.js]-----*/
+  let myName = "Tom";
+  export { myName }
+  /*-----export [test2.js]-----*/
+  let myName = "Jerry";
+  export { myName }
+
+  /*-----import [xxx.js]-----*/
+  import { myName as name1 } from "./test1.js";
+  import { myName as name2 } from "./test2.js";
+  console.log(name1);// Tom
+  console.log(name2);// Jerry
+  ```
+
+3. import 命令的特点
+  - 只读属性：`import` 不允许在加载模块的脚本里面，改写接口的引用指向，即可以改写 `import` 变量类型为对象的属性值，不能改写 `import` 变量类型为基本类型的值。
+    ```javascript
+    import {a} from "./xxx.js"
+    a = {}; // error
+    
+    import {a} from "./xxx.js"
+    a.foo = "hello"; // a = { foo : 'hello' }
+    ```
+  
+  - 单例模式：多次重复执行同一句 `import` 语句，那么只会执行一次，而不会执行多次。`import` 同一模块，声明不同接口引用，会声明对应变量，但只执行一次 `import` 。
+    ```javascript
+    import { a } "./xxx.js";
+    import { a } "./xxx.js";
+    // 相当于 import { a } "./xxx.js";
+    
+    import { a } from "./xxx.js";
+    import { b } from "./xxx.js";
+    // 相当于 import { a, b } from "./xxx.js";
+    ```
+
+4. export default 命令
+- 在一个文件或模块中，`export`、`import` 可以有多个，`export default` 仅有一个。
+- `export default` 中的 `default` 是对应的导出接口变量。
+- 通过 `export` 方式导出，在导入时要加 `{ }`，`export default` 则不需要。
+- `export default` 向外暴露的成员，可以使用任意变量来接收。
+
+```javascript
+var a = "My name is Tom!";
+export default a; // 仅有一个
+ 
+import b from "./xxx.js"; // 不需要加{}， 使用任意变量接收
+```
+
+#### 复合使用
+`export` 与 `import` 可以在同一模块使用，使用特点：
+
+- 可以将导出接口改名，包括 `default`。
+- 复合使用 `export` 与 `import` ，也可以导出全部，当前模块导出的接口会覆盖继承导出的。
+
+```javascript
+export { foo, bar } from "methods";
+ 
+// 约等于下面两段语句，不过上面导入导出方式该模块没有导入 foo 与 bar
+import { foo, bar } from "methods";
+export { foo, bar };
+ 
+/* ------- 特点 1 --------*/
+// 普通改名
+export { foo as bar } from "methods";
+// 将 foo 转导成 default
+export { foo as default } from "methods";
+// 将 default 转导成 foo
+export { default as foo } from "methods";
+ 
+/* ------- 特点 2 --------*/
+export * from "methods";
+```
+
+### Generator 函数
+
+ES6 新引入了 Generator 函数，可以通过 yield 关键字，把函数的执行流挂起，为改变执行流程提供了可能，从而为异步编程提供解决方案。
+
+1. Generator 函数组成
+  Generator 有两个区分于普通函数的部分：
+  - 一是在 `function` 后面，函数名之前有个 `*` ；
+  - 函数内部有 `yield` 表达式。
+  其中 `*` 用来表示函数为 Generator 函数，`yield` 用来定义函数内部的状态。
+
+
+  ```javascript
+  function* func(){
+    console.log("one");
+    yield '1';
+    console.log("two");
+    yield '2'; 
+    console.log("three");
+    return '3';
+  }
+  ```
+
+2. 执行机制
+> 调用 Generator 函数和调用普通函数一样，在函数名后面加上 `()` 即可，但是 Generator 函数不会像普通函数一样立即执行，而是返回一个指向内部状态对象的指针，所以要调用遍历器对象的 `next` 方法，指针就会从函数头部或者上一次停下来的地方开始执行。
+
+- 执行 Generator 函数，返回的是一个遍历器对象，也就是说，Generator 函数除了可以返回值，还可以用来迭代值。
+- 每次调用 Generator 函数，都会返回一个遍历器对象，即使函数内部没有 `return` 语句。
+- 遍历器对象，可以用 `next()` 方法，将指针移动到下一个状态。
+
+```javascript
+f.next();
+// one
+// {value: "1", done: false}
+ 
+f.next();
+// two
+// {value: "2", done: false}
+ 
+f.next();
+// three
+// {value: "3", done: true}
+ 
+f.next();
+// {value: undefined, done: true}
+```
+
+3. 函数返回的遍历器对象的方法
+  - `next()` 方法：一般情况下，`next` 方法不传入参数的时候，`yield` 表达式的返回值是 `undefined` 。当 `next` 传入参数的时候，该参数会作为上一步 `yield` 的返回值。
+    ```javascript
+    function* sendParameter(){
+      console.log("start");
+      var x = yield '2';
+      console.log("one:" + x);
+      var y = yield '3';
+      console.log("two:" + y);
+      console.log("total:" + (x + y));
+    }
+
+    // next不传参
+    var sendp1 = sendParameter();
+    sendp1.next();
+    // start
+    // {value: "2", done: false}
+    sendp1.next();
+    // one:undefined
+    // {value: "3", done: false}
+    sendp1.next();
+    // two:undefined
+    // total:NaN
+    // {value: undefined, done: true}
+
+    // next传参
+    var sendp2 = sendParameter();
+    sendp2.next(10);
+    // start
+    // {value: "2", done: false}
+    sendp2.next(20);
+    // one:20
+    // {value: "3", done: false}
+    sendp2.next(30);
+    // two:30
+    // total:50
+    // {value: undefined, done: true}
+    ```
+
+  - `return()` 方法：返回给定值，并结束遍历 Generator 函数。`return` 方法提供参数时，返回该参数；不提供参数时，返回 `undefined` 。
+    ```javascript
+    function* foo(){
+      yield 1;
+      yield 2;
+      yield 3;
+    }
+    var f = foo();
+    f.next();
+    // {value: 1, done: false}
+    f.return("foo");
+    // {value: "foo", done: true}
+    f.next();
+    // {value: undefined, done: true}
+    ```
+
+  - `throw()` 方法：在Generator 函数体外面抛出异常，再函数体内部捕获。
+    ```javascript
+    var g = function* () {
+      try {
+        yield;
+      } catch (e) {
+        console.log('catch inner', e);
+      }
+    };
+    
+    var i = g();
+    i.next();
+    
+    try {
+      i.throw('a');
+      i.throw('b');
+    } catch (e) {
+      console.log('catch outside', e);
+    }
+    // catch inner a
+    // catch outside b
+    ```
+
+4. yield* 表达式
+> `yield*` 表达式表示 `yield` 返回一个遍历器对象，用于在 Generator 函数内部，调用另一个 Generator 函数。
+
+  ```javascript
+  function* callee() {
+    console.log('callee: ' + (yield));
+  }
+  function* caller() {
+    while (true) {
+      yield* callee();
+    }
+  }
+  const callerObj = caller();
+  callerObj.next();
+  // {value: undefined, done: false}
+  callerObj.next("a");
+  // callee: a
+  // {value: undefined, done: false}
+  callerObj.next("b");
+  // callee: b
+  // {value: undefined, done: false}
+  
+  // 等同于
+  function* caller() {
+    while (true) {
+        for (var value of callee) {
+          yield value;
+        }
+    }
+  }
+  ```
+
+
+### async 与 await
+
+1. async
+async 是 ES7 才有的与异步操作有关的关键字，和 Promise ， Generator 有很大关联的。
+
+语法: `async function name([param[, param[, ... param]]]) { statements }`
+- `name`: 函数名称。
+- `param`: 要传递给函数的参数的名称。
+- `statements`: 函数体语句。
+
+返回值：async 函数返回一个 Promise 对象，可以使用 `then` 方法添加回调函数。
+
+```javascript
+async function helloAsync(){
+  return "helloAsync";
+}
+  
+console.log(helloAsync());  // Promise {<resolved>: "helloAsync"}
+ 
+helloAsync().then(v=>{
+  console.log(v);         // helloAsync
+});
+```
+
+async 函数中可能会有 `await` 表达式，async 函数执行时，如果遇到 `await` 就会先暂停执行 ，等到触发的异步操作完成后，恢复 async 函数的执行并返回解析值。`await` 关键字仅在 `async function` 中有效。
+
+```javascript
+function testAwait(){
+    return new Promise((resolve) => {
+      setTimeout(function(){
+        console.log("testAwait");
+        resolve();
+      }, 1000);
+   });
+}
+ 
+async function helloAsync(){
+  await testAwait();
+  console.log("helloAsync");
+}
+helloAsync();
+// testAwait
+// helloAsync
+```
+
+2. await
+`await` 操作符用于等待一个 Promise 对象, 它只能在异步函数 `async function` 内部使用。
+
+语法：`[return_value] = await expression;`
+- `expression`: 一个 Promise 对象或者任何要等待的值。
+
+返回值：返回 Promise 对象的处理结果。如果等待的不是 Promise 对象，则返回该值本身。如果一个 Promise 被传递给一个 `await` 操作符，`await` 将等待 Promise 正常处理完成并返回其处理结果。
+
+```javascript
+function testAwait (x) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(x);
+    }, 2000);
+  });
+}
+ 
+async function helloAsync() {
+  var x = await testAwait ("hello world");
+  console.log(x); 
+}
+helloAsync ();
+// hello world
+```
