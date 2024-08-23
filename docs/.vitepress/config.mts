@@ -83,7 +83,6 @@ export default defineConfigWithTheme({
         items: [
           { text: 'Vue', link: '/frame/vue' },
           { text: 'React', link: '/frame/react' },
-          { text: 'Angular', link: '/frame/angular' },
         ]
       },
       {

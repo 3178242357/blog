@@ -25,7 +25,7 @@ features:
     link: /basic
   - icon: ⚡️
     title: 框架
-    details: Vue、React、Angular
+    details: Vue、React
     link: /frame
   - icon: 📦
     title: 组件库
