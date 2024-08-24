@@ -1200,7 +1200,7 @@ export default {
 ## Vuex
 > Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
 
-1. 安装
+### 安装
 
 ::: code-group
 ```bash [npm]
@@ -1212,16 +1212,7 @@ yarn add vuex
 ```
 :::
 
-在一个模块化的打包系统中，您必须显式地通过 `Vue.use()` 来安装 Vuex：
-
-```javascript
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
-```
-
-2. 核心概念
+### 核心概念
 
 - `State`：Vuex 使用单一状态树，即只包含一个状态对象的仓库。
 - `Getters`：Vuex 使用 `getters` 计算属性，就是一些计算属性，它可以让我们能够轻松地从 `store` 中获取状态。
@@ -1232,62 +1223,840 @@ Vue.use(Vuex)
     - 可以通过提交 `mutation` 来触发状态的改变。
 - `Modules`：Vuex 允许我们将 `store` 分割成模块（module）。每个模块拥有自己的 `state`、`mutation`、`action`、`getters`、甚至是嵌套子模块。
 
-3. 基本用法
+### 使用 Vuex
+  
+- 基本用法：
 
-```javascript [state]
-// 只读 只能由Mutation里面的方法修改 天生自带命名空间
+  1. 创建 Vuex Store
+    ```javascript [src/store/index.js]
+    import Vue from 'vue';
+    import Vuex from 'vuex';
 
-// 组件中使用
-this.$store.模块名.属性
+    Vue.use(Vuex);
 
-// mapState 简化使用 （computed中）
-...mapState('模块名', ['属性名'])
+    export default new Vuex.Store({
+      state: {
+        count: 0,
+      },
+      mutations: {
+        increment(state) {
+          state.count++;
+        },
+      },
+      actions: {
+        increment({ commit }) {
+          commit('increment');
+        },
+      },
+      getters: {
+        doubleCount: state => state.count * 2,
+      },
+    });
+    ```
+
+  2. 注册 Vuex Store
+    ```javascript [src/main.js]
+    import Vue from 'vue';
+    import App from './App.vue';
+    import store from './store'; // 引入 Vuex store
+
+    new Vue({
+      el: '#app',
+      store, // 注册 Vuex store
+      render: h => h(App),
+    });
+    ```
+
+  3. 在组件中使用 Vuex
+    - 使用 `this.$store`：
+      ```html
+      <template>
+        <div>
+          <p>Count: {{ count }}</p>
+          <p>Double Count: {{ doubleCount }}</p>
+          <button @click="increment">Increment</button>
+          <button @click="incrementAsync">Increment Async</button>
+        </div>
+      </template>
+
+      <script>
+        export default {
+          computed: {
+            count: () => this.$store.state.count, // 直接访问 state.count
+            doubleCount: () => this.$store.getters.doubleCount, // 直接访问 getters.doubleCount
+          },
+          methods: {
+            increment() {
+              this.$store.commit('increment'); // 调用 mutation 更新 state
+            },
+            incrementAsync() {
+              this.$store.dispatch('increment'); // 调用 action 更新 state
+            },
+          },
+        };
+      </script>
+      ```
+    
+    - 使用 `mapState` 、`mapGetters` 、`mapMutations` 、`mapActions` 辅助函数：
+      ```html
+      <template>
+        <div>
+          <p>Count: {{ count }}</p>
+          <p>Double Count: {{ doubleCount }}</p>
+          <button @click="increment">Increment</button>
+          <button @click="increment">Increment Async</button>
+        </div>
+      </template>
+
+      <script>
+        import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+
+        export default {
+          computed: {
+            ...mapState(['count']), // 映射 state.count 到计算属性 count
+            ...mapGetters(['doubleCount']), // 映射 getters.doubleCount 到计算属性 doubleCount
+          },
+          methods: {
+            ...mapMutations(['increment']), // 映射 mutations.increment 到方法 increment
+            ...mapActions(['increment']), // 映射 actions.increment 到方法 increment
+          },
+        };
+      </script>
+      ```
+
+- 模块化使用：
+
+  1. 创建模块
+    ```javascript [src/store/modules/counter.js]
+    export default {
+      namespaced: true, // 开启命名空间
+      state: {
+        count: 0,
+      },
+      mutations: {
+        increment(state) {
+          state.count++;
+        },
+      },
+      actions: {
+        increment({ commit }) {
+          commit('increment');
+        },
+      },
+      getters: {
+        doubleCount: state => state.count * 2,
+      },
+    };
+    ```
+
+  2. 创建 Vuex Store 并注册模块
+    ```javascript [src/store/index.js]
+    import Vue from 'vue';
+    import Vuex from 'vuex';
+    import counter from './modules/counter';
+
+    Vue.use(Vuex);
+
+    export default new Vuex.Store({
+      modules: {
+        counter, // 注册 counter 模块
+      },
+      plugins: [
+        // 注册插件 如持久化插件 vuex-persistedstate
+      ] 
+    });
+    ```
+  
+  3. 在组件中使用模块
+    - 使用 `this.$store`：
+      ```html
+      <template>
+        <div>
+          <p>Count: {{ count }}</p>
+          <p>Double Count: {{ doubleCount }}</p>
+          <button @click="increment">Increment</button>
+          <button @click="incrementAsync">Increment Async</button>
+        </div>
+      </template>
+
+      <script>
+        export default {
+          computed: {
+            count() {
+              return this.$store.state.counter.count; // 访问模块中的状态
+            },
+            doubleCount() {
+              return this.$store.getters['counter/doubleCount']; // 访问模块中的 getter
+            },
+          },
+          methods: {
+            increment() {
+              this.$store.commit('counter/increment'); // 调用模块中的 mutation
+            },
+            incrementAsync() {
+              this.$store.dispatch('counter/increment'); // 调用模块中的 action
+            },
+          },
+        };
+      </script>
+      ```
+    
+    - 使用 `mapState` 、`mapGetters` 、`mapMutations` 、`mapActions` 辅助函数：
+      ```html
+      <template>
+        <div>
+          <p>Count: {{ count }}</p>
+          <p>Double Count: {{ doubleCount }}</p>
+          <button @click="increment">Increment</button>
+          <button @click="increment">Increment Async</button>
+        </div>
+      </template>
+
+      <script>
+        import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
+
+        export default {
+          computed: {
+            ...mapState('counter', ['count']), // 映射模块 counter 中的 state.count 到计算属性 count
+            ...mapGetters('counter', ['doubleCount']), // 映射模块 counter 中的 getters.doubleCount 到计算属性 doubleCount
+          },
+          methods: {
+            ...mapMutations('counter', ['increment']), // 映射模块 counter 中的 mutations.increment 到方法 increment
+            ...mapActions('counter', ['increment']), // 映射模块 counter 中的 actions.increment 到方法 increment
+          },
+        };
+      </script>
+      ```
+
+- 持久化插件：
+  > `vuex-persistedstate` 是一个 Vuex 插件，用于将 Vuex store 中的状态持久化到浏览器的 `localStorage` 或 `sessionStorage` 中，这样即使用户刷新页面或关闭浏览器，状态数据仍然会被保留。
+
+  1. 安装插件
+    ::: code-group
+    ```bash [npm]
+    npm install vuex-persistedstate --save
+    ```
+
+    ```bash [yarn]
+    yarn add vuex-persistedstate
+    ```
+    :::
+
+  2. 在 Vuex store 中引入并配置 `vuex-persistedstate`
+    ```javascript [src/store/index.js]
+    // 引入 vuex-persistedstate 插件
+    import createPersistedState from 'vuex-persistedstate';
+
+    export default new Vuex.Store({
+      ..., // 其他配置
+
+      plugins: [
+        createPersistedState( // 添加 vuex-persistedstate 插件
+          storage: window.localStorage, // 使用 localStorage（默认） 或 sessionStorage 存储
+          key: 'your-storage-key', // 自定义存储的 key
+          paths: ['count'], // 指定需要持久化的状态 如 count
+        ), 
+      ],
+    });
+
+## Router
+
+### 安装
+
+::: code-group
+```bash [npm]
+npm install vue-router --save
 ```
 
-```javascript [getters]
-// 同computed计算属性
+```bash [yarn]
+yarn add vue-router
+```
+:::
 
-// 组件使用
-this.$store.getters['模块名/方法名']
+在已有的项目安装：
 
-// mapGetters简化使用 （computed中）
-...mapGetters('模块名', ['方法名'])
+```bash
+vue add router
 ```
 
-```javascript [mutations]
-// 专门修改state的地方   同步代码    每个方法最多接收两个参数 （state, 额外参数）
+### 基本用法
 
-// 组件使用
-this.$store.commit('方法名', 实参)
+1. 创建路由配置
+  ```javascript [src/router/index.js]
+  import Vue from 'vue';
+  import Router from 'vue-router';
+  import Home from '@/views/Home.vue';
 
-// mapMutations简化使用 （methods中）
-...mapMutations('模块名', ['方法名'])
-```
+  Vue.use(Router);
 
-```javascript [actions]
-// 异步代码   每个方法最多接收两个参数 （ctx, 额外参数）
+  const routes = [
+    {
+      path: '/',
+      name: 'home',
+      component: Home,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('@/views/About.vue'),
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('@/views/Contact.vue'),
+    },
+  ];
 
-// 组件使用
-this.$store.dispatch('方法名', 实参)
+  export default new Router({
+    mode: 'history', // 使用 HTML5 History 模式
+    base: process.env.BASE_URL, // 设置基础路径
+    routes // 定义路由
+  });
+  ```
 
-// mapActions简化使用 （methods中）
-...mapActions('模块名', ['方法名'])
-```
+2. 注册路由
 
-```javascript [modules]
-// 持久化插件  vuex-persistedstate
+  ```javascript [src/main.js]
+  import Vue from 'vue';
+  import App from './App.vue';
+  import router from './router'; // 引入路由
 
-modules: {
-  // ...
-  plugins: [
-    createPersistedState({
-      key: 'my-app',
-      paths: ['user.name', 'cart']
-    })
+  new Vue({
+    el: '#app',
+    router, // 注册路由
+    render: h => h(App),
+  });
+  ```
+
+3. `App.vue` 使用路由
+  前提先创建`Home.vue`、`About.vue`、`Contact.vue`三个组件。
+
+  ```html
+  <template>
+    <div>
+      <ul>
+        <!-- 使用 router-link 组件来导航. -->
+        <!-- 通过传入 `to` 属性指定链接. -->
+        <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+        <li><router-link to="/">Home</router-link></li>
+        <li><router-link to="/about">About</router-link></li>
+        <li><router-link to="/contact">Contact</router-link></li>
+      </ul>
+
+      <!-- 路由出口 -->
+      <!-- 路由匹配到的组件将渲染在这里 -->
+      <router-view></router-view>
+    </div>
+  </template>
+
+  <script>
+    export default {
+      name: 'App',
+    };
+  </script>
+  ```
+
+### 动态路由
+
+我们经常需要把某种模式匹配到的所有路由，全都映射到同个组件。例如，我们有一个 User 组件，对于所有 ID 各不相同的用户，都要使用这个组件来渲染。
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    // 动态路径参数 以冒号开头
+    { path: '/user/:id', component: User }
   ]
+})
+```
+
+一个 “路径参数” 使用冒号 `:` 标记。当匹配到一个路由时，参数值会被设置到 `this.$route.params`，可以在每个组件内使用。于是，我们可以更新 User 的模板，输出当前用户的 ID：
+
+```html [User.vue]
+<template>
+  <div>User {{ $route.params.id }}</div>
+</template>
+```
+
+一个路由中设置多段 “路径参数”，对应的值都会设置到 `$route.params` 中。例如：
+
+|            模式           	|           匹配路径          |         $route.params        |
+| :--------------------------- | :---------------------------: | :---------------------------: |
+| `/user/:username`              |	  `/user/evan`	             |      `{ username: 'evan' }`    |
+|`/user/:username/post/:post_id`  |	`/user/evan/post/123`	     |  `{ username: 'evan', post_id: '123' }`  |
+
+除了 `$route.params` 外，`$route` 对象还提供了其它有用的信息，例如，`$route.query` (如果 URL 中有查询参数)、`$route.hash` 等等。你可以查看 [API 文档](https://v3.router.vuejs.org/zh/api/#路由对象) 的详细说明。
+
+- 响应路由参数的变化
+  > 使用路由参数时，组件实例会被复用,这也意味着组件的生命周期钩子不会再被调用。
+
+  想对路由参数的变化作出响应的话，你可以简单地 `watch` (监测变化) `$route` 对象：
+
+  ```javascript
+  export default {
+    watch: {
+    $route(to, from) {
+      // 对路由变化作出响应...
+    }
+  }
+  ```
+  或者使用 `beforeRouteUpdate` 导航守卫：
+
+  ```javascript 
+  export default {
+    beforeRouteUpdate(to, from, next) {
+      //对路由更改做出反应
+
+      // 不要忘记调用 next（）
+      next();
+    }
+  }
+  ```
+
+- 捕获所有路由或 404 Not found 路由
+  > 常规参数只会匹配被 `/` 分隔的 URL 片段中的字符。如果想匹配任意路径，我们可以使用通配符 `*`：
+  
+  ```javascript
+    {
+      // 会匹配所有路径
+      path: '*'
+    }
+    {
+      // 会匹配以 `/user-` 开头的任意路径
+      path: '/user-*'
+    }
+  ```
+
+  当使用通配符路由时，请确保路由的顺序是正确的，也就是说含有通配符的路由应该放在最后。路由 `{ path: '*' }` 通常用于客户端 404 错误。
+
+  ```javascript
+  const router = new VueRouter({
+    routes: [
+      // ... 其他路由
+      { path: '*', component: NotFoundComponent }
+    ]
+  })
+  ```
+
+  当使用一个通配符时，`$route.params` 内会自动添加一个名为 `pathMatch` 参数。它包含了 URL 通过通配符被匹配的部分：
+
+  ```javascript
+  // 给出一个路由 { path: '/user-*' }
+  this.$router.push('/user-admin')
+  this.$route.params.pathMatch // 'admin'
+
+  // 给出一个路由 { path: '*' }
+  this.$router.push('/non-existing')
+  this.$route.params.pathMatch // '/non-existing'
+  ```
+
+- 匹配优先级
+  > 路由匹配是从上到下进行的，也就是说，如果路径与多个路由都匹配，则匹配第一个路由。
+
+
+### 嵌套路由
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/user/:id',
+      component: User,
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 <router-view> 中
+          path: 'profile',
+          component: UserProfile
+        },
+        {
+          // 当 /user/:id/posts 匹配成功
+          // UserPosts 会被渲染在 User 的 <router-view> 中
+          path: 'posts',
+          component: UserPosts
+        }
+      ]
+    }
+  ]
+})
+```
+
+### 命名路由
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/user/:userId',
+      name: 'user',
+      component: User
+    }
+  ]
+})
+```
+
+要链接到一个命名路由，可以给 `router-link` 的 `to` 属性传一个对象：
+
+```html
+<router-link :to="{ name: 'user', params: { userId: 123 }}">User</router-link>
+```
+
+这跟代码调用 `router.push()` 是一回事：
+
+```javascript
+router.push({ name: 'user', params: { userId: 123 } })
+```
+这两种方式都会把路由导航到 `/user/123` 路径。
+
+
+### 命名视图
+
+> 有时候一个路由匹配到的组件可能有多种形态，我们需要多个视图来渲染。例如，一个用户界面可能有 `sidebar` 侧边栏、 `main` 主内容区、 `navbar` 导航栏等。<br>
+> 你可以在界面中拥有多个单独命名的视图，而不是只有一个单独的出口。如果 `router-view` 没有设置名字，那么默认为 `default`。
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/',
+      components: {
+        default: Home,
+        sidebar: Sidebar,
+        breadcrumb: Breadcrumb
+      }
+    }
+  ]
+})
+```
+
+```html
+<router-view></router-view>
+<router-view name="sidebar" v-if="$route.meta.sidebar"></router-view>
+<router-view name="breadcrumb"></router-view>
+```
+
+### 重定向和别名
+
+- 重定向：重定向也是通过 `routes` 配置来完成，下面例子是从 `/a` 重定向到 `/b`：
+
+  ```javascript
+  const router = new VueRouter({
+    routes: [
+      { path: '/a', redirect: '/b' }
+    ]
+  })
+  ```
+
+  重定向的目标也可以是一个命名的路由：
+
+  ```javascript
+  const router = new VueRouter({
+    routes: [
+      { path: '/a', redirect: { name: 'foo' }}
+    ]
+  })
+  ```
+
+  甚至是一个方法，动态返回重定向目标：
+
+  ```javascript
+  const router = new VueRouter({
+    routes: [
+      { path: '/a', redirect: to => {
+        // 方法接收 目标路由 作为参数
+        // return 重定向的 字符串路径/路径对象
+      }}
+    ]
+  })
+  ```
+
+- 别名：
+  > “重定向”的意思是，当用户访问 `/a` 时，URL 将会被替换成 `/b`，然后匹配路由为 `/b`，那么“别名”又是什么呢？<br>
+  > `/a` 的别名是 `/b`，意味着，当用户访问 `/b` 时，URL 会保持为 `/b`，但是路由匹配则为 `/a`，就像用户访问 `/a` 一样。
+
+  ```javascript
+  const router = new VueRouter({
+    routes: [
+      { path: '/a', component: A, alias: '/b' }
+    ]
+  })
+  ```
+
+
+### 路由元信息
+定义路由的时候可以配置 `meta` 字段：
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/foo',
+      component: Foo,
+      children: [
+        {
+          path: 'bar',
+          component: Bar,
+          // a meta field
+          meta: { requiresAuth: true }
+        }
+      ]
+    }
+  ]
+})
+```
+
+那么如何访问这个 `meta` 字段呢？
+
+> 一个路由匹配到的所有路由记录会暴露为 `$route` 对象 (还有在导航守卫中的路由对象) 的 `$route.matched` 数组。因此，我们需要遍历 `$route.matched` 来检查路由记录中的 `meta` 字段。
+
+下面例子展示在全局导航守卫中检查元字段：
+
+```javascript
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // 此路由需要认证，检查是否已登录
+    // 如果没有，请重定向到登录页面
+    if (!auth.loggedIn()) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
+})
+```
+
+### 编程式导航
+  > 除了使用 `<router-link>` 创建 `<a>` 标签来定义导航链接，我们还可以借助 router 的实例方法，通过编写代码来实现。
+
+  - `router.push(location, onComplete?, onAbort?)`
+    > 注意：在 Vue 实例内部，你可以通过 $router 访问路由实例。因此你可以调用 this.$router.push。<br>
+    > 这个方法会向 history 栈添加一个新的记录，所以，当用户点击浏览器后退按钮时，则回到之前的 URL。<br>
+    > 当你点击 `<router-link>` 时，这个方法会在内部调用，所以说，点击 `<router-link :to="...">` 等同于调用 `router.push(...)`。
+
+    | 声明式	| 编程式 |
+    | :--------------------------- | :----------: |
+    | `<router-link :to="...">`	| `router.push(...)` |
+
+    该方法的参数可以是一个字符串路径，或者一个描述地址的对象。例如：
+    ```javascript
+      // 字符串
+      router.push('home')
+
+      // 对象
+      router.push({ path: 'home' })
+
+      // 命名的路由
+      router.push({ name: 'user', params: { userId: '123' }})
+
+      // 带查询参数，变成 /register?plan=private
+      router.push({ path: 'register', query: { plan: 'private' }})
+    ```
+
+    注意：如果提供了 `path`，`params` 会被忽略，上述例子中的 `query` 并不属于这种情况。取而代之的是下面例子的做法，你需要提供路由的 `name` 或手写完整的带有参数的 `path`：
+
+    ```javascript
+      // 命名的路由
+      const userId = '123'
+      router.push({ name: 'user', params: { userId }})    // -> /user/123
+      router.push({ path: `/user/${userId}` })            // -> /user/123
+
+      // 这里的 params 不生效
+      router.push({ path: '/user', params: { userId }}) // -> /user
+    ```
+    同样的规则也适用于 `router-link` 组件的 `to` 属性。
+
+    > 在 2.2.0+，可选的在 `router.push` 或 `router.replace` 中提供 `onComplete` 和 `onAbort` 回调作为第二个和第三个参数。这些回调将会在导航成功完成 (在所有的异步钩子被解析之后) 或终止 (导航到相同的路由、或在当前导航完成之前导航到另一个不同的路由) 的时候进行相应的调用。在 3.1.0+，可以省略第二个和第三个参数，此时如果支持 Promise，`router.push` 或 `router.replace` 将返回一个 Promise。
+
+    **注意：** 如果目的地和当前路由相同，只有参数发生了改变 (比如从一个用户资料到另一个 `/users/1` -> `/users/2`)，你需要使用 `beforeRouteUpdate` 来响应这个变化 (比如抓取用户信息)。
+
+  - `router.replace(location, onComplete?, onAbort?)`
+    > 跟 `router.push` 很像，唯一的不同就是，它不会向 history 添加新记录，而是跟它的方法名一样 —— 替换掉当前的 history 记录。
+
+    | 声明式	| 编程式 |
+    | :---------- | :----------: |
+    | `<router-link :to="..." replace>`	| `router.replace(...)` |
+
+  - `router.go(n)`
+    > 这个方法的参数是一个整数，意思是在 history 记录中向前或者后退多少步，类似 `window.history.go(n)`。
+
+    例子：
+    ```javascript
+      // 在浏览器记录中前进一步，等同于 history.forward()
+      router.go(1)
+
+      // 后退一步记录，等同于 history.back()
+      router.go(-1)
+
+      // 前进 3 步记录
+      router.go(3)
+
+      // 如果 history 记录不够用，那就默默地失败呗
+      router.go(-100)
+      router.go(100)
+    ```
+
+  - 操作 History
+    > 你也许注意到 `router.push`、 `router.replace` 和 `router.go` 跟 `window.history.pushState`、 `window.history.replaceState` 和 `window.history.go` (opens new window)好像， 实际上它们确实是效仿 [window.history API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) 的。<br>
+    > Vue Router 的导航方法 `(push、 replace、 go)` 在各类路由模式 `(history、 hash 和 abstract)` 下表现一致。
+
+### 导航守卫
+
+1. 全局前置守卫 `router.beforeEach`
+
+```javascript
+const router = new VueRouter({ ... })
+
+router.beforeEach((to, from, next) => {
+  // ...
+})
+```
+
+当一个导航触发时，全局前置守卫按照创建顺序调用。守卫是异步解析执行，此时导航在所有守卫 `resolve` 完之前一直处于 等待中。
+
+每个守卫方法接收三个参数：
+
+  - `to` 即将要进入的目标路由对象
+  - `from` 当前导航正要离开的路由对象
+  - `next` 一定要调用该方法来 `resolve` 这个钩子。执行效果依赖 `next` 方法的调用参数。
+    - `next()`: 进行管道中的下一个钩子。如果全部钩子执行完了，则导航的状态就是 `confirmed` (确认的)。
+    - `next(false)`: 中断当前的导航。如果浏览器的 URL 改变了 (可能是用户手动或者浏览器后退按钮)，那么 URL 地址会重置到 `from` 路由对应的地址。
+    - `next('/') or next({ path: '/' })`: 跳转到一个不同的地址。当前的导航被中断，然后进行一个新的导航。你可以向 next 传递任意位置对象，且允许设置诸如 `replace: true`、`name: 'home'` 之类的选项以及任何用在 `router-link` 的 `to prop` 或 `router.push` 中的选项。
+    - `next(error)`: 如果传入 `next` 的参数是一个 `Error` 实例，则导航会被终止且该错误会被传递给 `router.onError()` 注册过的回调。
+
+确保 `next` 函数在任何给定的导航守卫中都被严格调用一次。它可以出现多于一次，但是只能在所有的逻辑路径都不重叠的情况下，否则钩子永远都不会被解析或报错。这里有一个在用户未能验证身份时重定向到 /login 的示例：
+
+```javascript
+// BAD
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  // 如果用户未能验证身份，则 `next` 会被调用两次
+  next()
+})
+// GOOD
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  else next()
+})
+```
+
+2. 全局解析守卫 `router.beforeResolve`
+这和 router.beforeEach 类似，区别是在导航被确认之前，同时在所有组件内守卫和异步路由组件被解析之后，解析守卫就被调用。
+
+```javascript
+const router = new VueRouter({ ... })
+
+router.beforeResolve((to, from, next) => {
+  // ...
+})
+```
+
+3. 全局后置钩子 `router.afterEach`
+和守卫不同的是，这些钩子不会接受 `next` 函数也不会改变导航本身：
+
+```javascript
+router.afterEach((to, from) => {
+  // ...
+})
+```
+
+4. 路由独享的守卫 `beforeEnter`
+在路由配置上直接定义 `beforeEnter` 守卫：
+
+```javascript
+const router = new VueRouter({
+  routes: [
+    {
+      path: '/foo',
+      component: Foo,
+      beforeEnter: (to, from, next) => {
+        // ...
+      }
+    }
+  ]
+})
+```
+这些守卫与全局前置守卫的方法参数是一样的。
+
+5. 组件内的守卫 `beforeRouteEnter` 、 `beforeRouteUpdate` 和 `beforeRouteLeave`
+
+在路由组件内直接定义：
+
+```javascript
+export default {
+  beforeRouteEnter(to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不！能！获取组件实例 `this`
+    // 因为当守卫执行前，组件实例还没被创建
+
+    // 通过传一个回调给 next 来访问组件实例，并且把组件实例作为回调方法的参数
+    next(vm => {
+      // 通过 `vm` 访问组件实例
+    })
+  },
+  beforeRouteUpdate(to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+    // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+    // 可以访问组件实例 `this`
+  },
+  beforeRouteLeave(to, from, next) {
+    // 导航离开该组件的对应路由时调用
+    // 可以访问组件实例 `this`
+  },
+}
+```
+
+**注意：** `beforeRouteEnter` 是支持给 `next` 传递回调的**唯一守卫**。对于 `beforeRouteUpdate` 和 `beforeRouteLeave` 来说，`this` 已经可用了，所以不支持传递回调，因为没有必要了。
+
+```javascript
+beforeRouteUpdate (to, from, next) {
+  // just use `this`
+  this.name = to.params.name
+  next()
 }
 ```
 
 
-## Router
+这个离开守卫通常用来禁止用户在还未保存修改前突然离开。该导航可以通过 `next(false)` 来取消。
+```javascript
+beforeRouteLeave (to, from, next) {
+  const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+  if (answer) {
+    next()
+  } else {
+    next(false)
+  }
+}
+```
+
+**完整的导航解析流程：**
+  - 🕛导航被触发。
+  - 🕧在失活的组件里调用 beforeRouteLeave 守卫。
+  - 🕐调用全局的 beforeEach 守卫。
+  - 🕜在重用的组件里调用 beforeRouteUpdate 守卫 (2.2+)。
+  - 🕑在路由配置里调用 beforeEnter。
+  - 🕝解析异步路由组件。
+  - 🕒在被激活的组件里调用 beforeRouteEnter。
+  - 🕞调用全局的 beforeResolve 守卫 (2.5+)。
+  - 🕓导航被确认。
+  - 🕟调用全局的 afterEach 钩子。
+  - 🕔触发 DOM 更新。
+  - 🕠调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入。
+
+
+# Vue3
+
+
+
+
+
+
+
+
+
+
 
