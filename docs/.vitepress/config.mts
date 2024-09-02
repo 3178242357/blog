@@ -81,7 +81,8 @@ export default defineConfigWithTheme({
       {
         text: '框架',
         items: [
-          { text: 'Vue', link: '/frame/vue' },
+          { text: 'Vue2', link: '/frame/vue2' },
+          { text: 'Vue3', link: '/frame/vue3' },
           { text: 'React', link: '/frame/react' },
         ]
       },

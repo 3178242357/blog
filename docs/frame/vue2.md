@@ -732,7 +732,7 @@ computed 属性默认只有 `getter` ，不过在需要时你也可以提供一�
 
 2. 生命周期图示
 
-![生命周期图示](/lifecycle.png)
+![生命周期图示](/lifecycle_2.png)
 
 
 ### 组件通信
@@ -1459,17 +1459,17 @@ yarn add vuex
       ],
     });
 
-## Router
+## Vue Router
 
 ### 安装
 
 ::: code-group
 ```bash [npm]
-npm install vue-router --save
+npm install vue-router@3 --save
 ```
 
 ```bash [yarn]
-yarn add vue-router
+yarn add vue-router@3
 ```
 :::
 
@@ -2048,7 +2048,7 @@ beforeRouteLeave (to, from, next) {
   - 🕠调用 beforeRouteEnter 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入。
 
 
-# Vue3
+
 
 
 

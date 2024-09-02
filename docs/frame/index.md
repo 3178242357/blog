@@ -8,12 +8,12 @@ title: frame
   <a href="https://cn.vuejs.org" target="_blank"><img src="/vue.svg" alt="vue" width="100" height="100"></a>
   <ul>
     <li> Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的<strong>渐进式框架</strong>。</li>
-    <li> <a href="/frame/vue">Vue</a> 只关注视图层， 采用自底向上增量开发的设计。</li>
-    <li> <a href="/frame/vue">Vue</a> 的目标是通过尽可能简单的 API 实现响应的数据绑定和组合的视图组件。</li>
+    <li> Vue 只关注视图层， 采用自底向上增量开发的设计。</li>
+    <li> Vue 的目标是通过尽可能简单的 API 实现响应的数据绑定和组合的视图组件。</li>
   </ul>
 </div>
 
-一个简单的 Vue 实例：
+一个简单的 <a href="/frame/vue2">Vue2</a> 实例：
 
 ```html
 <!DOCTYPE html>
@@ -40,18 +40,48 @@ title: frame
 </html>
 ```
 
+> 注意： Vue2 已于 2023 年 12 月 31 日停止维护。
+
+<a href="/frame/vue3">Vue3</a> 实例：
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello Vue.js!</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.26/dist/vue.global.prod.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <p>{{ message }}</p>
+    </div>
+
+    <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          message: 'Hello Vue.js!'
+        }
+      }
+    }).mount('#app')
+    </script>
+  </body>
+</html>
+```
+
 # React
 
 <div class="introduce">
   <a href="https://zh-hans.react.dev" target="_blank"><img src="/react.png" alt="react" width="100" height="100"></a>
   <ul>
     <li> React 是一个用于构建用户界面的 JavaScript 库。</li>
-    <li> <a href="/frame/react">React</a> 主要用于构建 UI，很多人认为 <a href="/frame/react">React</a> 是 MVC 中的 V（视图）。</li>
-    <li> <a href="/frame/react">React</a> 拥有较高的性能，代码逻辑非常简单，越来越多的人已开始关注和使用它。</li>
+    <li> React 主要用于构建 UI，很多人认为 React 是 MVC 中的 V（视图）。</li>
+    <li> React 拥有较高的性能，代码逻辑非常简单，越来越多的人已开始关注和使用它。</li>
   </ul>
 </div>
 
-一个简单的 React 实例：
+一个简单的 <a href="/frame/react">React</a> 实例：
 
 ```html
 <!DOCTYPE html>
