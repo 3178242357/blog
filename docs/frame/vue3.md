@@ -5711,3 +5711,232 @@ export default {
 ```
 
 在为后面的视图获取数据时，用户会停留在当前的界面，因此建议在数据获取期间，显示一些进度条或者别的指示。如果数据获取失败，同样有必要展示一些全局的错误提醒。
+
+### 在 setup 中访问路由和当前路由
+在 `setup` 里面没有访问 `this`，所以我们不能直接访问 `this.$router` 或 `this.$route`。作为替代，我们使用 `useRouter` 和 `useRoute` 函数：
+
+```vue
+  <script setup>
+  import { useRouter, useRoute } from 'vue-router'
+
+  const router = useRouter()
+  const route = useRoute()
+
+  function pushWithQuery(query) {
+    router.push({
+      name: 'search',
+      query: {
+        ...route.query,
+        ...query,
+      },
+    })
+  }
+  </script>
+```
+
+`route` 对象是一个响应式对象。在多数情况下，你应该**避免监听整个** `route` 对象，同时直接监听你期望改变的参数。
+
+```vue
+<script setup>
+import { useRoute } from 'vue-router'
+import { ref, watch } from 'vue'
+
+const route = useRoute()
+const userData = ref()
+
+// 当参数更改时获取用户信息
+watch(
+  () => route.params.id,
+  async newId => {
+    userData.value = await fetchUser(newId)
+  }
+)
+</script>
+```
+请注意，在模板中我们仍然可以访问 `$router` 和 `$route`，所以如果你只在模板中使用这些对象的话，是不需要 `useRouter` 或 `useRoute` 的。
+
+### 路由懒加载
+当打包构建应用时，JavaScript 包会变得非常大，影响页面加载。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样就会更加高效。
+
+Vue Router 支持开箱即用的动态导入，这意味着你可以用动态导入代替静态导入：
+
+```js
+// 将
+
+// import UserDetails from './views/UserDetails.vue'
+
+// 替换成
+const UserDetails = () => import('./views/UserDetails.vue')
+
+
+const router = createRouter({
+  // ...
+  routes: [
+    { path: '/users/:id', component: UserDetails }
+    // 或在路由定义里直接使用它
+    { path: '/users/:id', component: () => import('./views/UserDetails.vue') },
+  ],
+})
+```
+
+`component (和 components)` 配置接收一个返回 Promise 组件的函数，Vue Router 只会在第一次进入页面时才会获取这个函数，然后使用缓存数据。这意味着你也可以使用更复杂的函数，只要它们返回一个 Promise ：
+
+```js
+const UserDetails = () =>
+  Promise.resolve({
+    /* 组件定义 */
+  })
+```
+
+一般来说，对所有的路由**都使用动态导入**是个好主意。
+
+:::warning 注意
+不要在路由中使用异步组件。异步组件仍然可以在路由组件中使用，但路由组件本身就是动态导入的。
+:::
+
+如果你使用的是 webpack 之类的打包器，它将自动从 [代码分割](https://webpack.js.org/guides/code-splitting/) 中受益。
+
+如果你使用的是 Babel，你将需要添加 [`syntax-dynamic-import`](https://babeljs.io/docs/babel-plugin-syntax-dynamic-import/) 插件，才能使 Babel 正确地解析语法。
+
+#### 把组件按组分块
+- 使用 `webpack`
+  有时候我们想把某个路由下的所有组件都打包在同个异步块 `(chunk)` 中。只需要使用命名 `chunk`，一个特殊的注释语法来提供 chunk name (需要 **Webpack > 2.4**)：
+
+  ```js
+    const UserDetails = () =>
+      import(/* webpackChunkName: "group-user" */ './UserDetails.vue')
+    const UserDashboard = () =>
+      import(/* webpackChunkName: "group-user" */ './UserDashboard.vue')
+    const UserProfileEdit = () =>
+      import(/* webpackChunkName: "group-user" */ './UserProfileEdit.vue')
+  ```
+  `webpack` 会将任何一个异步模块与相同的块名称组合到相同的异步块中。
+
+- 使用 `Vite`
+  在Vite中，你可以在rollupOptions下定义分块：
+
+  ```js
+    // vite.config.js
+    export default defineConfig({
+      build: {
+        rollupOptions: {
+          // https://rollupjs.org/guide/en/#outputmanualchunks
+          output: {
+            manualChunks: {
+              'group-user': [
+                './src/UserDetails',
+                './src/UserDashboard',
+                './src/UserProfileEdit',
+              ],
+            },
+          },
+        },
+      },
+    })
+  ```
+
+### 动态路由
+
+  对路由的添加通常是通过 `routes` 选项来完成的，但是在某些情况下，你可能想在应用程序已经运行的时候添加或删除路由。具有可扩展接口(如 Vue CLI UI )这样的应用程序可以使用它来扩展应用程序。
+
+#### 添加路由
+  动态路由主要通过两个函数实现。`router.addRoute()` 和 `router.removeRoute()`。它们只注册一个新的路由，也就是说，如果新增加的路由与当前位置相匹配，就需要你用 `router.push()` 或 `router.replace()` 来手动导航，才能显示该新路由。我们来看一个例子：
+
+  想象一下，只有一个路由的以下路由：
+
+  ```js
+    const router = createRouter({
+      history: createWebHistory(),
+      routes: [{ path: '/:articleName', component: Article }],
+    })
+  ```
+
+  进入任何页面，`/about`，`/store`，或者 `/3-tricks-to-improve-your-routing-code` 最终都会呈现 `Article` 组件。如果我们在 `/about` 上添加一个新的路由：
+
+  ```js
+    router.addRoute({ path: '/about', component: About })
+  ```
+  
+  页面仍然会显示 `Article` 组件，我们需要手动调用 `router.replace()` 来改变当前的位置，并覆盖我们原来的位置（而不是添加一个新的路由，最后在我们的历史中两次出现在同一个位置）：
+
+  ```js
+    router.addRoute({ path: '/about', component: About })
+    // 我们也可以使用 this.$route 或 useRoute()
+    router.replace(router.currentRoute.value.fullPath)
+  ```
+
+  记住，如果你需要等待新的路由显示，可以使用 `await router.replace()`。
+
+#### 在导航守卫中添加路由
+  如果你决定在导航守卫内部添加或删除路由，你不应该调用 router.replace()，而是通过返回新的位置来触发重定向：
+
+  ```js
+    router.beforeEach(to => {
+      if (!hasNecessaryRoute(to)) {
+        router.addRoute(generateRoute(to))
+        // 触发重定向
+        return to.fullPath
+      }
+    })
+  ```
+
+  上面的例子有两个假设：
+
+  - 第一，新添加的路由记录将与 `to` 位置相匹配，实际上导致与我们试图访问的位置不同。
+  - 第二，`hasNecessaryRoute()` 在添加新的路由后返回 `false`，以避免无限重定向。
+
+  因为是在重定向中，所以我们是在替换将要跳转的导航，实际上行为就像之前的例子一样。而在实际场景中，添加路由的行为更有可能发生在导航守卫之外，例如，当一个视图组件挂载时，它会注册新的路由。
+
+#### 删除路由
+  有几个不同的方法来删除现有的路由：
+
+  - 通过添加一个名称冲突的路由。如果添加与现有途径名称相同的途径，会先删除路由，再添加路由：
+
+    ```js
+      router.addRoute({ path: '/about', name: 'about', component: About })
+      // 这将会删除之前已经添加的路由，因为他们具有相同的名字且名字必须是唯一的
+      router.addRoute({ path: '/other', name: 'about', component: Other })
+    ```
+
+  - 通过调用 router.addRoute() 返回的回调：
+
+    ```js
+      const removeRoute = router.addRoute(routeRecord)
+      removeRoute() // 删除路由如果存在的话
+    ```
+    当路由没有名称时，这很有用。
+
+  - 通过使用 `router.removeRoute()` 按名称删除路由：
+
+    ```js
+      router.addRoute({ path: '/about', name: 'about', component: About })
+      // 删除路由
+      router.removeRoute('about')
+    ```
+    需要注意的是，如果你想使用这个功能，但又想避免名字的冲突，可以在路由中使用 `Symbol` 作为名字。
+    当路由被删除时，所有的别名和子路由也会被同时删除
+
+#### 添加嵌套路由
+  要将嵌套路由添加到现有的路由中，可以将路由的 `name` 作为第一个参数传递给 `router.addRoute()`，这将有效地添加路由，就像通过 `children` 添加的一样：
+
+  ```js
+    router.addRoute({ name: 'admin', path: '/admin', component: Admin })
+    router.addRoute('admin', { path: 'settings', component: AdminSettings })
+  ```
+  
+  这等效于：
+
+  ```js
+    router.addRoute({
+      name: 'admin',
+      path: '/admin',
+      component: Admin,
+      children: [{ path: 'settings', component: AdminSettings }],
+    })
+  ```
+
+#### 查看现有路由
+  Vue Router 提供了两个功能来查看现有的路由：
+
+  - `router.hasRoute()`：检查路由是否存在。
+  - `router.getRoutes()`：获取一个包含所有路由记录的数组。
