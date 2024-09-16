@@ -83,22 +83,19 @@ title: ui-library
 .introduce {
   display: flex;
   align-items: center;
+  gap: 15px;
 
   img {
-    margin-right: 20px;
     margin-top: 0 !important;
     border: 0 !important;
   }
 }
 
 .ele-react {
-  img {
-    margin-right: 60px;
-  }
+  gap: 50px;
 
   a:after {
     margin-top: -32px !important;
-    margin-right: 60px;
     float: right;
     content: 'React';
     font-size: 13px;
@@ -112,13 +109,10 @@ title: ui-library
 }
 
 .vant-2 {
-  img {
-    margin-right: 60px;
-  }
+  gap: 50px;
 
   a:after {
     margin-top: -52px !important;
-    margin-right: 60px;
     float: right;
     content: 'Vue2';
     font-size: 13px;
@@ -132,13 +126,10 @@ title: ui-library
 }
 
 .vant-react {
-  img {
-    margin-right: 60px;
-  }
+  gap: 55px;
 
   a:after {
     margin-top: -52px !important;
-    margin-right: 60px;
     float: right;
     content: 'React';
     font-size: 13px;
@@ -152,13 +143,10 @@ title: ui-library
 }
 
 .vant-weapp {
-  img {
-    margin-right: 60px;
-  }
+  gap: 60px;
 
   a:after {
     margin-top: -52px !important;
-    margin-right: 60px;
     float: right;
     content: 'WeApp';
     font-size: 13px;
@@ -169,5 +157,9 @@ title: ui-library
     mask-image: none !important;
     color: #409eff !important;
   }
+}
+
+@media (min-width: 640px) {
+  
 }
 </style>

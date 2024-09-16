@@ -122,11 +122,34 @@ export default defineConfigWithTheme({
       copyright: 'Copyright © 2024-present xiaofei Deng'
     },
 
+    // 文档页脚
     docFooter: {
       prev: 'prev',
       next: 'next'
     },
 
-    outline: [2, 4]
+    // 侧边栏目录
+    outline: {
+      label: '目录',
+      level: [2, 4]
+    },
+    
+    // 外部链接显示图标
+    // externalLinkIcon: true,
+
+    // 深色模式切换
+    darkModeSwitchTitle: '深色',
+
+    // 浅色模式切换
+    lightModeSwitchTitle: '浅色',
+    
+    // 深色模式切换(移动端)
+    darkModeSwitchLabel: '暗黑模式',
+    
+    // 侧边菜单标签(移动端)
+    sidebarMenuLabel: '菜单',
+
+    // 返回顶部(移动端)
+    returnToTopLabel: '置顶',
   },
 })

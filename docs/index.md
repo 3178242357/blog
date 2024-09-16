@@ -12,7 +12,7 @@ hero:
     alt: logo
   actions:
     - theme: brand
-      text: 开始学习
+      text: 开始学习 👉
       link: /markdown-examples
     - theme: alt
       text: 工具
