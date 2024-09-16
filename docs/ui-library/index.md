@@ -31,7 +31,7 @@ title: ui-library
 
 
 <div class="introduce">
-  <a href="https://ant-design.antgroup.com/index-cn" target="_blank"><img src="/ant-design-vue-logo.svg" alt="ant-design-vue" width="50" height="50"></a>
+  <a href="https://www.antdv.com/docs/vue/introduce-cn/" target="_blank"><img src="/ant-design-vue-logo.svg" alt="ant-design-vue" width="50" height="50"></a>
   <p> Ant Design 的 Vue 实现，开发和服务于企业级后台产品，开箱即用的高质量 Vue 组件</p>
 </div>
 

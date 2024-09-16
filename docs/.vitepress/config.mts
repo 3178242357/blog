@@ -59,10 +59,12 @@ export default defineConfigWithTheme({
       {
         text: '组件库',
         items: [
-          { text: 'Element UI', link: '/ui-library/element-ui' },
-          { text: 'Ant Design', link: '/ui-library/ant-design' },
-          { text: 'Vant UI', link: '/ui-library/vant-ui' },
-          { text: 'Naive UI', link: '/ui-library/naive-ui' },
+          { text: 'Element UI', link: 'https://element-plus.org/zh-CN' },
+          { text: 'Ant Design', link: 'https://ant-design.antgroup.com/index-cn' },
+          { text: 'Vant UI', link: 'https://vant-ui.github.io/vant/#/zh-CN' },
+          { text: 'Naive UI', link: 'https://www.naiveui.com/zh-CN/light' },
+          { text: 'uView', link: 'https://uviewui.com' },
+          { text: 'Nut UI', link: 'https://nutui.jd.com/' },
         ],
       },
     ],
