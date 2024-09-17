@@ -1,6 +1,6 @@
 ---
-title: html
-titleTemplate: basic
+title: react
+titleTemplate: frame
 # head:
 #   - - link
 #     - rel: icon

@@ -1,6 +1,6 @@
 ---
-title: html
-titleTemplate: basic
+title: vue2
+titleTemplate: frame
 # head:
 #   - - link
 #     - rel: icon

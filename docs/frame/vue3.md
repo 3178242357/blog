@@ -1,3 +1,13 @@
+---
+title: vue3
+titleTemplate: frame
+# head:
+#   - - link
+#     - rel: icon
+#       type: image/svg+xml
+#       href: /logo.svg
+---
+
 # Vue3
 
 ## 两种 API 风格
