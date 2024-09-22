@@ -291,5 +291,629 @@ function MyButton({ count, onClick }) {
 }
 ```
 
-## 
+## React 组件
+### 函数组件
+  > 使用 JS 的函数（或箭头函数）创建的组件，就叫做函数组件
 
+  - 组件的名称必须**首字母大写**，react内部会根据这个来判断是组件还是普通的HTML标签
+  - 函数组件必须**有返回值**，表示该组件的 UI 结构，如果不需要渲染任何内容，则返回 null
+  - 组件就像 HTML 标签一样可以被渲染到页面中。组件表示的是一段结构内容，对于函数组件来说，渲染的内容是函数的返回值就是对应的内容
+  - 使用函数名称作为组件标签名称，可以成对出现也可以自闭合
+
+  ```jsx
+    // 定义函数组件
+    function HelloFn () {
+      return <div>这是我的第一个函数组件!</div>
+    }
+
+    function App () {
+      return (
+        <div className="App">
+          {/* 渲染函数组件 */}
+          <HelloFn />
+          <HelloFn></HelloFn>
+        </div>
+      )
+    }
+
+    export default App
+  ```
+
+  1. 事件绑定
+  ```jsx
+    // 函数组件
+    function HelloFn () {
+
+      // 定义事件回调函数
+      function handleClick () {
+        console.log('按钮被点击了')
+      }
+      // or
+      //  const handleClick = () => {
+      //    console.log('按钮被点击了')
+      //  }
+
+      // 绑定事件
+      return <button onClick={handleClick}>点我</button>
+    }
+  ```
+
+  2. 获取事件对象
+  ```jsx
+    // 函数组件
+    function HelloFn () {
+
+      // 定义事件回调函数
+      function handleClick (event) {
+        console.log('事件对象：', event)
+      }
+      // or
+      //  const handleClick = (event) => {
+      //    console.log('事件对象：', event)
+      //  }
+
+      // 绑定事件
+      return <button onClick={handleClick}>点我</button>
+    }
+  ```
+
+  3. 传递额外参数
+  ```jsx
+    // 函数组件
+    function HelloFn () {
+
+      const list = [
+        {
+          id: 1001,
+          name: 'react'
+        },
+        {
+          id: 1002,
+          name: 'vue'
+        }
+      ]
+
+      // 定义事件回调函数
+      function handleClick (event, id) {
+        console.log(event, id)
+      }
+      // or
+      //  const handleClick = (event, id) => {
+      //    console.log(event, id)
+      //  }
+
+      // 绑定事件
+      return <ul>
+        {list.map(item => <li key={item.id}>
+          {item.name}
+          <button onClick={(e) => handleClick(e, item.id)}>点我</button>
+        </li>)}
+      </ul>
+    }
+  ```
+
+
+### 类组件
+  > 使用 ES6 的 `class` 创建的组件，叫做类（class）组件
+
+  - 类名称也必须以**大写字母开头**
+  - 类组件应该继承 `React.Component` 父类，从而使用父类中提供的方法或属性
+  - 类组件必须**提供 `render` 方法**，`render` 方法必须**有返回值**，表示该组件的 UI 结构
+
+  ```jsx
+    // 引入React
+    import React from 'react'
+
+    // 定义类组件
+    class HelloC extends React.Component {
+      render () {
+        return <div>这是我的第一个类组件!</div>
+      }
+    }
+
+    function App () {
+      return (
+        <div className="App">
+          {/* 渲染类组件 */}
+          <HelloC />
+          <HelloC></HelloC>
+        </div>
+      )
+    }
+    export default App
+  ```
+
+  1. 事件绑定
+  ```jsx
+    // 定义类组件
+    class HelloC extends React.Component {
+
+      // 定义事件回调函数
+      handleClick () {
+        console.log('按钮被点击了')
+      }
+      // or
+      //  handleClick = () => {
+      //    console.log('按钮被点击了')
+      //  }
+
+      // 绑定事件
+      render () {
+        return <button onClick={() => this.handleClick()}>点我</button>
+      }
+    }
+  ```
+
+  2. 获取事件对象
+  ```jsx
+    // 定义类组件
+    class HelloC extends React.Component {
+
+      // 定义事件回调函数
+      handleClick (event) {
+        console.log('事件对象：', event)
+      }
+      // or
+      //  handleClick = (event) => {
+      //    console.log('事件对象：', event)
+      //  }
+
+      // 绑定事件
+      render () {
+        return <button onClick={this.handleClick}>点我</button>
+      }
+    }
+  ```
+
+  3. 传递额外参数
+  ```jsx
+    // 定义类组件
+    class HelloC extends React.Component {
+
+      state = {
+        list: [
+          {
+            id: 1001,
+            name: 'react'
+          },
+          {
+            id: 1002,
+            name: 'vue'
+          }
+        ]
+      }
+
+      // 定义事件回调函数
+      handleClick (event, id) {
+        console.log(event, id)
+      }
+      // or
+      //  handleClick = (event, id) => {
+      //    console.log(event, id)
+      //  }
+
+      // 绑定事件
+      render () {
+        const { list } = this.state
+        return <ul>
+          {list.map(item => <li key={item.id}>
+            {item.name}
+            <button onClick={(e) => this.handleClick(e, item.id)}>点我</button>
+          </li>)}
+        </ul>
+      }
+    }
+  ```
+
+  4. this问题说明
+  ![this问题说明](/react-this.png)
+    
+  ```jsx
+    class App extends React.Component {
+
+      // constructor () {
+      //   super()
+      //   this.undefinedClick = this.undefinedClick.bind(this)  // this -> App组件 （this）
+      // }
+      
+      state = {
+        msg: 'hello react'
+      }
+
+      undefinedClick() {
+        console.log(this.state.msg)  // this -> undefined
+      }
+
+      this1Click() {
+        console.log(this.state.msg)  // this -> App组件 （this）
+      }
+
+      this2Click = () => {
+        console.log(this.state.msg)  // this -> App组件 （this）
+      }
+
+      this3Click() {
+        console.log(this.state.msg)  // this -> App组件 （this）
+      }
+
+      render() {
+        return (
+          <div>
+            <button onClick={this.undefinedClick}>点我</button>
+            <button onClick={() => this.this1Click()}>点我</button>
+            <button onClick={this.this2Click}>点我</button>
+            <button onClick={this.this3Click.bind(this)}>点我</button>
+          </div>
+        )
+      }
+    }
+  ```
+  
+  随着js标准的发展，主流的写法已经变成了 `class fields`，无需考虑太多 `this` 问题
+
+
+
+## React 组件状态
+
+:::tip 提示
+一个前提：在React hook出来之前，函数式组件是没有自己的状态的，所以我们统一通过类组件来讲解
+:::
+
+![react-class-state](/react-class-state.png)
+
+**说明：**
+  1. 函数组件：
+    - 无状态组件【前提：不考虑 `hooks` 的情况下】
+    - 没有自己的状态，只负责页面的展示（静态，不会发生变化），性能比较高
+  2. 类组件
+    - 有状态组件
+    - 当组件的状态发生了改变，页面结构也就发生了改变（数据驱动视图）
+    - 状态可以是任何数据类型，包括对象、数组、字符串、数字等
+
+### 初始化状态
+  - 通过 `class` 的实例属性 `state` 来初始化 
+  - `state` 的值是一个对象结构，表示一个组件可以有多个数据状态 
+
+  ```jsx
+    class Counter extends React.Component {
+      // 初始化状态
+      state = {
+        count: 0
+      }
+      render() {
+        return <button>计数器</button>
+      }
+    }
+  ```
+
+### 读取状态
+  - 通过 `this.state` 来获取状态 
+
+  ```jsx
+    class Counter extends React.Component {
+      // 初始化状态
+      state = {
+        count: 0
+      }
+      render() {
+        // 读取状态
+        return <button>计数器{this.state.count}</button>
+      }
+    }
+  ```
+
+### 修改状态
+  - 语法
+    - `this.setState({ 要修改的部分数据 })`
+  - `setState` 方法作用 
+    - 修改 `state` 中的数据状态
+    - 更新UI
+  - 注意事项
+	  - 不要直接修改 `state` 中的值，必须通过 `setState` 方法进行修改 
+  
+  ```jsx
+    class Counter extends React.Component {
+      // 初始化状态
+      state = {
+        count: 0
+      }
+
+      setCount = () => {
+        // 修改状态
+        this.setState({
+          count: this.state.count + 1
+        })
+      }
+
+      render() {
+        // 读取状态
+        return <button onClick={this.setCount}>计数器{this.state.count}</button>
+      }
+    }
+  ```
+
+  1. `setState` 进阶 - 更新数据的说明
+    - `setState` 方法更新状态是同步的，但是表现为延迟更新状态（注意：非异步更新状态！！！）
+    - 延迟更新状态：
+      - 调用 `setState` 时，将要更新的状态对象，放到一个更新队列中暂存起来（没有立即更新）
+      - 如果多次调用 `setState` 更新状态，状态会进行合并，后面覆盖前面
+      - 等到所有的操作都执行完毕，React 会拿到最终的状态，然后触发组件更新
+    - 优势：
+      - 多次调用 `setState` 不会造成性能问题，只会合并更新，最后一次更新 `setState()` ，只会触发一次重新渲染，提升性能
+
+
+  2. `setState` 进阶 - 推荐语法
+    - 问题：多次调用 `setState` 同时修改相同的状态，只有一个会起到作用？
+    - 原因：由于 `setState` 是延迟更新，在多次调用 `setState` 情况下，后续的 `setState` 无法依赖于前面 `setState` 中的值
+    - 解决方案：使用 `setState((prevState) => {})` 语法
+      - `prevState`：表示上一次 `setState` 更新后的状态
+    
+    ```jsx
+      this.setState((prevState) => {
+        return {
+          count: prevState.count + 1
+        }
+      })
+    ```
+
+  3. `setState` 进阶 - 第二个参数
+    - 语法：`setState(updater[, callback])`
+    - `setState` 中的第二个参数为可选参数 
+      - 它是一个回调函数
+      - 会在状态更新（页面完成重新渲染）后立即执行某个操作
+    
+    ```jsx
+      this.setState({
+        count: this.state.count + 1
+      }, () => {
+        console.log('状态更新后并且 DOM 更新后执行')
+      })
+    ```
+
+### React的状态不可变
+
+> 不要直接修改状态的值，而是基于当前状态创建新的状态值
+
+1. 错误的直接修改
+  ```jsx
+    state = {
+      count : 0,
+      list: [1,2,3],
+      person: {
+        name:'jack',
+        age:18
+      }
+    }
+
+    // 直接修改简单类型Number
+    this.state.count++
+    ++this.state.count
+    this.state.count += 1
+    this.state.count = 1
+
+    // 直接修改数组
+    this.state.list.push(123)
+    this.state.list.spice(1,1)
+
+    // 直接修改对象
+    this.state.person.name = 'rose'
+  ```
+
+2. 基于当前状态创建新值
+  ```jsx
+    state = {
+      count : 0,
+      list: [1,2,3],
+      person: {
+        name:'jack',
+        age:18
+      }
+    }
+
+    this.setState({
+      count: this.state.count + 1
+      list: [...this.state.list, 4],
+      person: {
+        ...this.state.person,
+        // 覆盖原来的属性 就可以达到修改对象中属性的目的
+        name: 'rose'
+      }
+    })
+  ```
+
+
+## React组件通信
+
+1. 父子组件通信
+  - 父组件通过 props 向子组件传递数据
+  - 子组件通过回调函数向父组件传递数据
+
+  ```jsx
+    import React from 'react'
+
+    // 函数式子组件
+    function FSon(props) {
+      // props是只读对象，不能直接修改
+      // props可以传递任意数据（数字、字符串、布尔值、数组、对象、函数、JSX）
+      console.log(props)
+
+      function handleClick() {
+        // 调用父组件传递过来的回调函数 并注入参数
+        props.changeMsg('this is newMessage')
+      }
+
+      return (
+        <div>
+          子组件1
+          {props.msg}
+          <button onClick={handleClick}>change</button>
+        </div>
+      )
+    }
+
+    // 类子组件
+    class CSon extends React.Component {
+
+      handleClick = () => {
+        // 调用父组件传递过来的回调函数 并注入参数
+        props.changeMsg('this is newMessage')
+      }
+
+      render() {
+        return (
+          <div>
+            子组件2
+            {this.props.msg}
+            <button onClick={this.handleClick}>change</button>
+          </div>
+        )
+      }
+    }
+
+    // 父组件
+    class App extends React.Component {
+      state = {
+        message: 'this is message'
+      }
+
+      // 提供回调函数
+      changeMessage = (newMsg) => {
+        console.log('子组件传过来的数据:',newMsg)
+        this.setState({
+          message: newMsg
+        })
+      }
+
+      render() {
+        return (
+          <div>
+            <div>父组件{this.state.message}</div>
+            <FSon msg={this.state.message} changeMsg={this.changeMessage} />
+            <CSon msg={this.state.message} changeMsg={this.changeMessage} />
+          </div>
+        )
+      }
+    }
+
+    export default App
+  ```
+
+  2. 兄弟组件通信
+    - 利用共同的父组件实现兄弟通信
+  
+  ```jsx
+    import React from 'react'
+
+    // 子组件A
+    function SonA(props) {
+      return (
+        <div>
+          SonA
+          {props.msg}
+        </div>
+      )
+    }
+
+    // 子组件B
+    function SonB(props) {
+      return (
+        <div>
+          SonB
+          <button onClick={() => props.changeMsg('new message')}>changeMsg</button>
+        </div>
+      )
+    }
+
+    // 父组件
+    class App extends React.Component {
+      // 父组件提供状态数据
+      state = {
+        message: 'this is message'
+      }
+      // 父组件提供修改数据的方法
+      changeMsg = (newMsg) => {
+        this.setState({
+          message: newMsg
+        })
+      }
+
+      render() {
+        return (
+          <>
+            {/* 接收数据的组件 */}
+            <SonA msg={this.state.message} />
+            {/* 修改数据的组件 */}
+            <SonB changeMsg={this.changeMsg} />
+          </>
+        )
+      }
+    }
+
+    export default App
+  ```
+
+  3. 跨层级组件通信
+    - 利用 `context` API 实现跨层级通信
+
+  ```jsx
+    import React, { createContext }  from 'react'
+
+    // 1. 创建 Context 对象 导出 Provider 和 Consumer对象  
+    const { Provider, Consumer } = createContext()
+
+    // 3. 需要用到数据的组件使用 Consumer 包裹获取数据 
+    function ComC() {
+      return (
+        <Consumer >
+          {value => <div>{value}</div>}
+        </Consumer>
+      )
+    }
+
+    function ComA() {
+      return (
+        <ComC/>
+      )
+    }
+
+    // 2. 使用 Provider 包裹上层组件提供数据
+    class App extends React.Component {
+      state = {
+        message: 'this is message'
+      }
+      render() {
+        return (
+          <Provider value={this.state.message}>
+            <div className="app">
+              <ComA />
+            </div>
+          </Provider>
+        )
+      }
+    }
+
+    export default App
+  ```
+
+  说明：
+    - `createContext`：可以传入默认值
+    - 使用 `Provider` 时，`Consumer` 获取到的就是 `value` 的值
+    - 不使用 `Provider` 时，`Consumer` 获取到的就是默认值
+
+  ```jsx
+    // 有默认值的情况：
+    const { Provider, Consumer } = createContext('pink')
+
+    // 父组件：
+    <Provider value="blue"></Provider>
+
+    // 子组件（使用 Provider 组件）：
+    <Consumer>
+      {color => <span style={{ color }}>文字</span>}  // 蓝色
+    </Consumer>
+
+    // 子组件（不使用 Provider 组件）：
+    <Consumer>
+      {color => <span style={{ color }}>文字</span>}  // 粉色
+    </Consumer>
+  ```
