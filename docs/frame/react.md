@@ -722,10 +722,10 @@ function MyButton({ count, onClick }) {
   ```
 
 
-## React组件通信
+## React 组件通信
 
-1. 父子组件通信
-  - 父组件通过 props 向子组件传递数据
+### 父子组件通信
+  - 父组件通过 `props` 向子组件传递数据
   - 子组件通过回调函数向父组件传递数据
 
   ```jsx
@@ -798,9 +798,161 @@ function MyButton({ count, onClick }) {
     export default App
   ```
 
-  2. 兄弟组件通信
-    - 利用共同的父组件实现兄弟通信
-  
+#### props校验
+实现步骤：
+1. 安装属性校验包：`yarn add prop-types`
+2. 导入 `prop-types` 包
+3. 使用 `组件名.propTypes = {}` 给组件添加校验规则
+
+:::code-group
+```jsx [函数式组件]
+  import { Component } from 'react'
+  import PropTypes from 'prop-types'
+
+  class App extends Component {
+    state = {
+      colors: 'red',
+    }
+    render() {
+      return (
+        <div>
+          <h1>props 校验</h1>
+          <Child colors={this.state.colors} />
+        </div>
+      )
+    }
+  }
+
+  // 函数组件
+  function Child({ colors }) {
+    return (
+      <div>
+        <h2>子组件</h2>
+        {colors.map((item) => (
+          <div>{item}</div>
+        ))}
+      </div>
+    )
+  }
+
+  Child.propTypes = {
+    colors: PropTypes.array,
+  }
+```
+
+```jsx [类组件]
+  import { Component } from 'react'
+  import PropTypes from 'prop-types'
+
+  class App extends Component {
+    state = {
+      colors: 'red',
+    }
+    render() {
+      return (
+        <div>
+          <h1>props 校验</h1>
+          <Child colors={this.state.colors} />
+        </div>
+      )
+    }
+  }
+
+  // 类组件
+  class Child extends Component {
+    // 类组件：约束方式二
+    static propTypes = {
+      colors: PropTypes.array,
+    }
+    render() {
+      const { colors } = this.props
+      return (
+        <div>
+          <h2>子组件</h2>
+          {colors.map((item) => (
+            <div>{item}</div>
+          ))}
+        </div>
+      )
+    }
+  }
+
+  // // 类组件: 约束方式一：
+  // //  约束传入的属性类型
+  // Child.propTypes = {
+  //   colors: PropTypes.array,
+  // }
+
+  export default App
+```
+:::
+
+1. 规则说明
+  - 常见类型：`array`、`bool`、`func`、`number`、`object`、`string`
+  - React元素类型：`element`
+  - 必填项：`isRequired`
+  - 特定的结构对象：`shape({})`
+
+  ```jsx
+    // 常见类型
+    optionalFunc: PropTypes.func,
+    // 必填 只需要在类型后面串联一个isRequired
+    requiredFunc: PropTypes.func.isRequired,
+    // 特定结构的对象
+    optionalObjectWithShape: PropTypes.shape({
+      color: PropTypes.string,
+      fontSize: PropTypes.number
+    })
+  ```
+
+2. 默认值
+  - 函数组件：直接使用函数参数默认值
+    ```jsx
+      function List({pageSize = 10}) {
+        return (
+          <div>
+            此处展示props的默认值：{ pageSize }
+          </div>
+        )
+      }
+
+      // 设置默认值    			//新版 React 已经不再推荐使用 defaultProps 来添加默认值
+                            //而是推荐使用函数参数的默认值来实现：
+      // List.defaultProps = {
+      //   pageSize: 10
+      // }
+
+      // 不传入pageSize属性
+      <List />
+    ```
+
+  - 类组件：使用类静态属性声明默认值，`static defaultProps = {}`
+    ```jsx
+      class List extends Component {
+        // 方式二：使用类静态属性声明默认值 （推荐）
+        static defaultProps = {
+          pageSize: 10
+        }
+
+        render() {
+          return (
+            <div>
+              此处展示props的默认值：{this.props.pageSize}
+            </div>
+          )
+        }
+      }
+
+      // 方式一：设置默认值  
+      // List.defaultProps = {
+      //   pageSize: 10
+      // }
+      <List />
+    ```
+
+### 兄弟组件通信
+  - 利用共同的父组件实现兄弟通信
+
   ```jsx
     import React from 'react'
 
@@ -852,8 +1004,8 @@ function MyButton({ count, onClick }) {
     export default App
   ```
 
-  3. 跨层级组件通信
-    - 利用 `context` API 实现跨层级通信
+### 跨层级组件通信
+  - 利用 `context` API 实现跨层级通信
 
   ```jsx
     import React, { createContext }  from 'react'
@@ -917,3 +1069,479 @@ function MyButton({ count, onClick }) {
       {color => <span style={{ color }}>文字</span>}  // 粉色
     </Consumer>
   ```
+
+## React 生命周期
+> 组件的生命周期是指组件从被创建到挂载到页面中运行起来，再到组件不用时卸载的过程。
+**注意：**只有类组件才有生命周期（类组件 实例化  函数组件 不需要实例化）
+![react-lifecycle](/react-lifecycle.png)
+
+[React 生命周期图示](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram)
+
+### 生命周期 - 挂载阶段
+在组件实例被创建并插入到dom中时
+![componentDidMount](/lifecycle-didMount.png)
+
+| 钩子函数 | 触发时机	| 作用 |
+| ------- | ------- | ---- |
+| `constructor` |	创建组件时，最先执行，初始化的时候只执行一次 | `初始化state`  `创建 Ref`  `使用 bind 解决 this 指向`等 |
+| `render` | 每次组件渲染都会触发 | `渲染UI`（注意： **不能在里面调用 `setState()`**）|
+| `componentDidMount` |	组件挂载（完成DOM渲染）后执行，初始化的时候执行一次 |	`发送网络请求`  `DOM操作` |
+
+`constructor` 说明
+  - 作用：类的构造器，当创建类实例时，会自动执行这个函数
+  - 特点：由于类组件都是继承自 Component，在 Component 中已经帮我们实现了 constructor 中的内容，所以一般我们不会使用
+
+  ```jsx
+    export default class App extends Component {
+      constructor (props) {
+        super(props)
+      }
+      render () {
+        return (
+          <div>
+            <h3>App</h3>
+          </div>
+        )
+      }
+    }
+  ```
+
+**注意：**
+- `class` 类的限制：如果继承了父类，并且在 `class` 中手动写了 `constructor`，那么，必须手动调用 `super`
+- `React` 组件限制：如果写了 `constructor`，必须将 `props` 传递给 `super`，这样，才能保证在 `constructor` 中通过 `this.props` 来拿到 `props` 值
+
+
+### 生命周期 - 更新阶段
+当组件的 `props` 或 `state` 发生变化时
+![componentDidUpdate](/lifecycle-didUpdate.png)
+
+| 钩子函数 | 触发时机	| 作用 |
+| ------- | ------- | ---- |
+| `render` | 每次组件渲染都会触发 | `渲染UI`（与 **挂载阶段** 是同一个`render`）|
+| `componentDidUpdate` | 组件更新后（DOM渲染完毕） | `DOM操作` 可以获取到更新后的DOM内容，不要直接调用 `setState()` 需包裹在一个条件语句里 |
+
+**强制更新：** `this.forceUpdate()`
+
+### 生命周期 - 卸载阶段
+当组件从 DOM中移除时
+
+| 钩子函数 | 触发时机	| 作用 |
+| ------- | ------- | ---- |
+| `componentWillUnmount` | 组件卸载（从页面中消失） |	`执行清理工作`（比如：清理定时器等）|
+
+
+## React Hooks
+
+> 一套能够使函数组件更强大，更灵活的“钩子”
+
+React体系里组件分为 `类组件` 和 `函数组件`
+经过多年的实战，函数组件是一个更加匹配React的设计理念 UI = f(data)，也更有利于逻辑拆分与重用的组件表达形式，而先前的函数组件是不可以有自己的状态的，为了能让函数组件可以拥有自己的状态，所以从react v16.8开始，Hooks应运而生
+
+注意点：
+1. 有了hooks之后，为了兼容老版本，class类组件并没有被移除，俩者都可以使用
+2. 有了hooks之后，不能在把函数成为无状态组件了，因为hooks为函数组件提供了状态
+3. hooks只能在函数组件中使用
+
+Hooks解决了什么问题：
+1. 组件的逻辑复用：
+  在hooks出现之前，react先后尝试了 `mixins混入`，`HOC高阶组件`，`render-props`等模式。但是都有各自的问题，比如mixin的数据来源不清晰，高阶组件的嵌套问题等等 
+2. class组件自身的问题：
+class组件就像一个厚重的‘战舰’ 一样，大而全，提供了很多东西，有不可忽视的学习成本，比如各种生命周期，this指向问题等等，而我们更多时候需要的是一个轻快灵活的‘快艇’ 
+
+### useState
+> `useState` 为函数组件提供状态（`state`）
+
+```jsx
+  import { useState } from 'react'
+
+  function App() {
+    // 参数：状态初始值比如,传入 0 表示该状态的初始值为 0
+    // 返回值：数组,包含两个值：1 状态值（state） 2 修改该状态的函数（setState）
+    const [count, setCount] = useState(0)
+    return (
+      <button onClick={() => setCount(count + 1)}>{count}</button>
+    )
+  }
+  export default App
+```
+
+**注意：**
+  - 修改状态的时候，一定要**使用新的状态替换旧的状态**，不能直接修改旧的状态，尤其是引用类型
+  - `useState` 只能出现在 函数组件 或者其他 hook函数 中 
+  - `useState` 不能嵌套在 if/for/其它函数中（react按照hooks的调用顺序识别每一个hook） 
+
+  ```js
+    let num = 1
+    function List(){
+      num++
+      if(num / 2 === 0){
+        const [name, setName] = useState('cp') 
+      }
+      const [list,setList] = useState([])
+    }
+    // 俩个hook的顺序不是固定的，这是不可以的！！！
+  ```
+
+#### useState - 回调函数的参数
+- 使用场景
+  > 参数只会在组件的初始渲染中起作用，后续渲染时会被忽略。如果初始 `state` 需要通过计算才能获得，则可以传入一个函数，在函数中计算并返回初始的 `state`，此函数只在初始渲染时被调用
+
+  ```jsx
+    const [name, setName] = useState(()=>{   
+      // 编写计算逻辑    
+
+      return '计算之后的初始值'
+    })
+  ```
+
+- 语法规则
+  1. 回调函数 `return` 出去的值将作为 `name` 的初始值
+  2. 回调函数中的逻辑只会在组件初始化的时候执行一次
+
+- 语法选择
+  1. 如果就是初始化一个普通的数据 直接使用 `useState(普通数据)` 即可
+  2. 如果要初始化的数据无法直接得到需要通过计算才能获取到，使用 `useState(()=>{})`
+
+### useEffect
+> `useEffect` 用于处理副作用（side effect）
+
+什么是副作用
+  > 副作用是相对于主作用来说的，一个函数除了主作用，其他的作用就是副作用。对于 React 组件来说，主作用就是根据数据（state/props）渲染 UI，除此之外都是副作用（比如，手动修改 DOM）
+
+常见的副作用
+  - 数据请求 ajax 发送
+  - 手动修改 dom
+  - localstorage 操作
+
+```jsx
+  import { useEffect, useState } from 'react'
+
+  function App() {
+    const [count, setCount] = useState(0)
+  
+    useEffect(()=>{
+      // dom操作
+      document.title = `当前已点击了${count}次`
+    })
+    return (
+      <button onClick={() => setCount(count + 1)}>{count}</button>
+    )
+  }
+
+  export default App
+```
+
+1. 依赖项控制执行时机
+  - 不添加依赖项
+    > 组件首次渲染执行一次，以及不管是哪个状态更改引起组件更新时都会重新执行
+    > 1. 组件初始渲染
+    > 2. 组件更新 （不管是哪个状态引起的更新）
+
+    ```jsx
+      useEffect(()=>{
+          console.log('副作用执行了')
+      })
+    ```
+
+  - 添加空数组
+    > 组件只在首次渲染时执行一次
+
+    ```jsx
+      useEffect(()=>{
+        console.log('副作用执行了')
+      },[])
+    ```
+
+  - 添加特定依赖项
+    > 副作用函数在首次渲染时执行，在依赖项发生变化时重新执行
+
+    ```jsx
+      function App() {  
+        const [count, setCount] = useState(0)  
+        const [name, setName] = useState('zs') 
+        
+        useEffect(() => {    
+            console.log('副作用执行了')  
+        }, [count])  
+        
+        return (    
+          <>      
+            <button onClick={() => { setCount(count + 1) }}>{count}</button>      
+            <button onClick={() => { setName('cp') }}>{name}</button>    
+          </>  
+        )
+      }
+    ```
+**注意事项：**
+`useEffect` 回调函数中用到的数据（比如，count）就是依赖数据，就应该出现在依赖项数组中，如果不添加依赖项就会有bug出现
+
+2. 清理副作用
+> 如果想要清理副作用 可以在副作用函数中的末尾返回一个新的函数，在新的函数中编写清理副作用的逻辑
+> 注意执行时机为：
+> 1. 组件卸载时自动执行
+> 2. 组件更新时，下一个 `useEffect` 副作用函数执行之前自动执行
+
+```jsx
+  import { useEffect, useState } from "react"
+
+  const App = () => {
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+      const timerId = setInterval(() => {
+        setCount(count + 1)
+      }, 1000)
+
+      return () => {
+        // 用来清理副作用的事情
+        clearInterval(timerId)
+      }
+    }, [count])
+
+    return (
+      <div>
+        {count}
+      </div>
+    )
+  }
+
+  export default App
+```
+
+3. useEffect - 异步操作
+> 如何在 `useEffect` 中发送网络请求，并且封装同步 `async await` 操作
+
+说明：
+  - 在组件中，可以使用 `useEffect Hook` 来发送请求获取数据
+  - `effect` 只能是一个同步函数，不能使用 `async` 
+  - 如果 `effect` 是 `async` 的，此时返回值是 `Promise` 对象。这样的话，就无法保证清理函数被立即调用
+  - 为了使用 `async/await` 语法，可以在 `effect` 内部创建 `async` 函数，并调用
+
+```jsx  
+  // 错误演示：不要给 effect 添加 async
+  useEffect(async () => {
+    const res = await axios.get('http://xxx')
+    return () => {}
+  }, [])
+
+  // 正确使用 在内部单独定义一个函数，然后把这个函数包装成同步
+  useEffect(() => {
+    const loadData = async () => {
+      const res = await axios.get('http://xxx')
+    }
+    loadData()
+
+    return () => {}
+  }, [])
+```
+
+语法总结：
+```jsx
+  // 1
+  // 触发时机：1 第一次渲染会执行 2 每次组件重新渲染都会再次执行
+  // componentDidMount + ComponentDidUpdate
+  useEffect(() => {})
+
+  // 2（使用频率最高）
+  // 触发时机：只在组件第一次渲染时执行
+  // componentDidMount
+  useEffect(() => {}, [])
+
+  // 3（使用频率最高）
+  // 触发时机：1 第一次渲染会执行 2 当 count 变化时会再次执行
+  // componentDidMount + componentDidUpdate（判断 count 有没有改变）
+  useEffect(() => {}, [count])
+
+  // 4
+  useEffect(() => {
+    // 返回值函数的执行时机：组件卸载时
+    // 在返回的函数中，清理工作
+    return () => {
+      // 相当于 componentWillUnmount
+    }
+  }, [])
+```
+
+### useRef
+> `useRef` 用于获取真实的dom元素对象或者是组件对象
+
+- 获取dom元素对象
+  ```jsx
+    import { useEffect, useRef } from 'react'
+
+    function App() {  
+        const h1Ref = useRef(null) 
+
+        useEffect(() => {   
+            // 通过 h1Ref.current 来访问对应的 DOM
+            console.log(h1Ref.current)  
+        },[])  
+
+        return (    
+            <div>      
+                <h1 ref={ h1Ref }>this is h1</h1>    
+            </div>  
+        )
+    }
+
+    export default App
+  ```
+
+- 获取组件对象
+  > 函数组件由于没有实例，不能使用ref获取，如果想获取组件实例，必须是类组件
+
+  :::code-group
+  ```jsx [Foo.js]
+    class Foo extends React.Component {  
+      sayHi = () => {    
+        console.log('say hi')  
+      }  
+
+      render(){    
+        return <div>Foo</div>  
+      }
+    }
+        
+    export default Foo
+  ```
+
+  ```jsx [App.js]
+    import { useEffect, useRef } from 'react'
+    import Foo from './Foo'
+
+    function App() {  
+      const h1Foo = useRef(null)  
+
+      useEffect(() => {    
+        console.log(h1Foo.current)  
+      }, [])  
+
+      return (    
+        <div> 
+          <Foo ref={ h1Foo } />
+        </div>  
+      )
+    }
+
+    export default App
+  ```
+  :::
+
+### useContext
+> `useContext` 用于跨层级组件通信
+
+```jsx
+  import { createContext, useContext } from 'react'
+
+  // 1. 使用 createContext 创建 Context 对象
+  const Context = createContext()
+
+  function Foo() {  
+    return <div>Foo <Bar/></div>
+  }
+
+  function Bar() {  
+    // 3. 在底层组件通过 useContext 函数获取数据  
+    const name = useContext(Context)  
+    return <div>Bar {name}</div>
+  }
+
+  function App() {  
+    return (    
+      // 2. 在顶层组件通过 Provider 提供数据   
+      <Context.Provider value={'this is name'}>     
+        <div><Foo/></div>    
+      </Context.Provider>  
+    )
+  }
+
+  export default App
+```
+
+`useContext Hook` 与 `<Context.Consumer>` 的异同：
+  - 相同点： 
+    都可以获取 `Context.Provider` 中提供的 `value` 数据
+  - 不同点： 
+    `<Context.Consumer>`：在 JSX 中获取 `Context` 共享的数据 <br>
+    `useContext`：在 JS 代码 或者 JSX 中获取 `Context` 的数据
+
+```jsx
+  function Bar() {  
+    // 在普通的 JS 代码中：
+    const name = useContext(Context) 
+    console.log(name)
+
+    return (
+      <div>
+        <div>Bar useContext 获取到的 name 值： {name}</div>
+        {/* 在 JSX 中： */}
+        <Context.Consumer>
+          {name => <span>共享的数据为：{name}</span>}
+        </Context.Consumer>
+      </div>
+    )
+  }
+```
+
+#### useContext - 跨文件使用
+
+说明：
+1. 在开发中，多个组件文件往往会被管理在不同的文件夹中： 
+  - App 单独一个文件
+  - Node 单独一个文件
+  - SubNode 单独一个文件
+2. `useContext` 获取要获取数据， 
+  - 必须保证传入的 `Context` 对象与传入数据的对象是同一个
+
+解决方案：
+1. 单独创建一个 `Context` 文件，将 `Context` 对象导出
+  ```jsx [Context.js] 
+    // 用来创建一个公共的 context 实例
+    import { createContext } from 'react'
+    const myContext = createContext()
+
+    export default myContext
+  ```
+
+2. 在需要传参的组件导入 `Context` 对象，并传入参数
+  ```jsx [App.js]
+    import Node from './Node.js'
+    import { useState } from 'react'
+
+    import myContext from './myContext'  ////////// 自定义名字实现/////////////
+
+    export default function App() {
+      const [color, setColor] = useState('blue')
+
+      return (
+        <myContext.Provider value={{ color, setColor }}>
+          <div className="App">
+            <h2>App</h2>
+            <Node />
+          </div>
+        </myContext.Provider>
+      )
+    }
+  ```
+
+3. 在需要获取数据的组件导入 `Context` 对象，并使用 `useContext` 获取数据
+  ```jsx [Node.js]
+    import { useContext } from 'react'
+
+    import myContext from './myContext'  ////////// 自定义名字实现/////////////
+
+    export default function Node() {
+      // 接收数据
+      const { color, setColor } = useContext(myContext)
+
+      return (
+        <div className="Node">
+          <h2>Node</h2>
+          <div style={{ color: color }}>color: {color}</div>
+          <button onClick={() => setColor('red')}>点我修改 color</button>
+        </div>
+      )
+    }
+  ```
+
+[更多 API 介绍](https://zh-hans.react.dev/reference/react)
