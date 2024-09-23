@@ -8,7 +8,7 @@ titleTemplate: frame
 #       href: /logo.svg
 ---
 
-# react
+# React
 
 ## 安装
 :::code-group
@@ -1546,8 +1546,10 @@ class组件就像一个厚重的‘战舰’ 一样，大而全，提供了很�
 
 [更多 API 介绍](https://zh-hans.react.dev/reference/react)
 
-# React Router
-## 基础使用
+## React Router
+[官方文档](https://reactrouter.com/en/main)
+[React Router v6.21.1 中文文档](https://baimingxuan.github.io/react-router6-doc/)
+### 基础使用
   1. 导入必要的路由 router 内置组件
   2. 准备俩个 React 组件
   3. 按照路由的规则进行路由配置
@@ -1579,7 +1581,7 @@ function App() {
 export default App
 ```
 
-## 核心内置组件说明
+### 核心内置组件说明
 1. BrowerRouter
 > 作用: 包裹整个应用，一个React应用只需要使用一次
 
@@ -1617,7 +1619,7 @@ export default App
 
 其中 `path` 属性用来指定匹配的路径地址，`element` 属性指定要渲染的组件，图中配置的意思为: 当url上访问的地址为 `/` 时，当前路由发生匹配，对应的 `Home` 组件渲染
 
-## 编程式导航
+### 编程式导航
 实现步骤：
 1. 导入一个 `useNavigate` 钩子函数
 2. 执行 `useNavigate` 函数 得到 跳转函数
@@ -1645,7 +1647,7 @@ export default Home
   navigate('/about', { replace: true } )
 ```
 
-## 路由传参
+### 路由传参
 
 1. searchParams传参
   - 路由传参
@@ -1672,7 +1674,7 @@ export default Home
       const { id } = useParams()
     ```
 
-## 嵌套路由
+### 嵌套路由
 
 实现步骤：
 1. App.js中定义嵌套路由声明
@@ -1711,7 +1713,7 @@ export default Home
 ```
 :::
 
-## 默认二级路由
+### 默认二级路由
 > 场景: 应用首次渲染完毕就需要显示的二级路由
 
 实现步骤:
@@ -1748,7 +1750,7 @@ const Layout = () => {
 ```
 :::
 
-## 404路由配置
+### 404路由配置
 > 场景：当url的路径在整个路由配置中都找不到对应的path，使用404兜底组件进行渲染
 
 :::code-group
@@ -1779,7 +1781,7 @@ const Layout = () => {
 :::
 
 
-## 集中式路由配置
+### 集中式路由配置
 > 场景: 当我们需要路由权限控制点时候, 对路由数组做一些权限的筛选过滤，所谓的集中式路由配置就是用一个数组统一把所有的路由对应关系写好替换 本来的 Roues 组件
 
 ```jsx [App.js]
@@ -1832,3 +1834,597 @@ function App() {
 
 export default App
 ```
+
+## React-Mobx
+[官方文档](https://cn.mobx.js.org/)
+
+### 配置开发环境
+  1. 一个 create-react-app 创建好的 React 项目环境
+  2. mobx 框架本身
+  3. 一个用来链接 mobx 和 React 的中间件
+
+```bash
+# 创建一个 React 项目
+yarn create vite react-mobx --template react
+
+# 安装 mobx 和中间件工具 mobx-react-lite 只能函数组件中使用
+yarn add  mobx  mobx-react-lite
+```
+
+### 基础使用
+> 使用 mobx 实现一个计数器的案例
+
+![mobx-counter案例](/mobx-counter.png)
+
+#### 初始化 mobx
+  1. 定义数据状态 `state`
+  2. 在构造器中实现数据响应式处理 `makeAutoObservble`
+  3. 定义修改数据的函数 `action`
+  4. 实例化 `store` 并导出
+
+  ```jsx
+    import { makeAutoObservable } from 'mobx'
+
+    class CounterStore {
+      count = 0 // 定义数据
+
+      constructor() {
+        makeAutoObservable(this)  // 响应式处理
+      }
+
+      // 定义修改数据的方法
+      addCount = () => {
+        this.count++
+      }
+    }
+
+    const counter = new CounterStore()
+    export default counter
+  ```
+
+#### React 使用 store
+  1. 在组件中导入 ``counterStore`` 实例对象
+  2. 在组件中使用 `storeStore` 实例对象中的数据
+  3. 通过事件调用修改数据的方法修改 `store` 中的数据
+  4. 让组件响应数据变化
+
+  ```jsx
+    // 导入counterStore
+    import counterStore from './store'
+    // 导入observer方法
+    import { observer } from 'mobx-react-lite'
+    function App() {
+      return (
+        <div className="App">
+          <button onClick={() => counterStore.addCount()}>
+            {counterStore.count}
+          </button>
+        </div>
+      )
+    }
+    // 包裹组件让视图响应数据变化
+    export default observer(App)
+  ```
+
+### 计算属性（衍生状态）
+> 概念: 有一些状态根据现有的状态计算（衍生）得到，我们把这种状态叫做计算属性。
+
+
+实现步骤
+  1. 声明一个存在的数据
+  2. 通过 `get` 关键词定义计算属性
+  3. 在 `makeAutoObservable` 方法中标记计算属性
+
+:::code-group
+```jsx [counterStore.js]
+import { computed, makeAutoObservable } from 'mobx'
+
+class CounterStore {
+  list = [1, 2, 3, 4, 5, 6]
+
+  constructor() {
+    makeAutoObservable(this, {
+      filterList: computed
+    })
+  }
+
+  // 修改原数组
+  changeList = () => {
+    this.list.push(7, 8, 9)
+  }
+
+  // 定义计算属性
+  get filterList () {
+    return this.list.filter(item => item > 4)
+  }
+}
+
+const counter = new CounterStore()
+export default counter
+```
+
+```jsx [App.js]
+// 导入counterStore
+import counterStore from './store'
+// 导入observer方法
+import { observer } from 'mobx-react-lite'
+
+function App() {
+  return (
+    <div className="App">
+      {/* 原数组 */}
+      {JSON.stringify(counterStore.list)}
+      {/* 计算属性 */}
+      {JSON.stringify(counterStore.filterList)}
+      <button onClick={() => counterStore.changeList()}>change list</button>
+    </div>
+  )
+}
+// 包裹组件让视图响应数据变化
+export default observer(App)
+```
+:::
+
+
+### 异步数据处理
+实现步骤:
+  1. 在mobx中编写异步请求方法 获取数据 存入state中
+  2. 组件中通过 useEffect + 空依赖  触发action函数的执行 
+
+:::code-group
+```jsx [channlStore.js]
+// 异步的获取
+import { makeAutoObservable } from 'mobx'
+import axios from 'axios'
+
+class ChannelStore {
+  channelList = []
+  
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  // 只要调用这个方法 就可以从后端拿到数据并且存入channelList
+  setChannelList = async () => {
+    const res = await axios.get('http://xxx/channels')
+    this.channelList = res.data.data.channels
+  }
+}
+
+const channlStore = new ChannelStore()
+export default channlStore
+```
+
+```jsx [App.js]
+import { useEffect } from 'react'
+import { useStore } from './store'
+import { observer } from 'mobx-react-lite'
+
+function App() {
+  const { channlStore } = useStore()
+
+  // 1. 使用数据渲染组件
+  // 2. 触发 action 函数发送异步请求
+  useEffect(() => {
+    channlStore.setChannelList()
+  }, [])
+
+  return (
+    <ul>
+      {channlStore.channelList.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  )
+}
+
+// 让组件可以响应数据的变化[也就是数据一变组件重新渲染]
+export default observer(App)
+```
+:::
+
+
+### 模块化
+> 场景: 一个项目有很多的业务模块，我们不能把所有的代码都写到一起，这样不好维护，提了提供可维护性，需要引入模块化机制
+![模块化](/mobx-module.png)
+
+实现步骤
+  1. 拆分模块js文件，每个模块中定义自己独立的 state/action
+  2. 在 store/index.js 中导入拆分之后的模块，进行模块组合
+  3. 利用 React 的 context 的机制导出统一的 useStore 方法，给业务组件使用
+
+:::code-group
+```jsx [store/taskStore.js]
+  // 定义task模块
+  import { makeAutoObservable } from 'mobx'
+
+  class TaskStore {
+    taskList = []
+    constructor() {
+      makeAutoObservable(this)
+    }
+    addTask () {
+      this.taskList.push('vue', 'react')
+    }
+  }
+
+  const task = new TaskStore()
+  export default task
+```
+
+```jsx [store/channelStore.js]
+// 定义counterStore
+import { makeAutoObservable } from 'mobx'
+
+class CounterStore {
+  count = 0
+  list = [1, 2, 3, 4, 5, 6]
+  constructor() {
+    makeAutoObservable(this)
+  }
+  addCount = () => {
+    this.count++
+  }
+  changeList = () => {
+    this.list.push(7, 8, 9)
+  }
+  get filterList () {
+    return this.list.filter(item => item > 4)
+  }
+}
+
+const counter = new CounterStore()
+export default counter
+```
+
+```jsx [store/index.js]
+// 组合模块导出统一方法
+import React from 'react'
+
+import counter from './counterStore'
+import task from './taskStore'
+
+class RootStore {
+  constructor() {
+    this.counterStore = counter
+    this.taskStore = task
+  }
+}
+
+const rootStore = new RootStore()
+
+// context机制的数据查找链 Provider 如果找不到 就找 createContext 方法执行时传入的参数
+const context = React.createContext(rootStore)
+
+const useStore = () => React.useContext(context)
+// useStore() =>  rootStore  { counterStore, taskStore }
+
+export { useStore }
+```
+
+```jsx [App.js]
+// 组件使用模块中的数据
+import { observer } from 'mobx-react-lite'
+// 导入方法
+import { useStore } from './store'
+
+function App() {
+  // 得到store
+  const store = useStore()
+  return (
+    <div className="App">
+      <button onClick={() => store.counterStore.addCount()}>
+        {store.counterStore.count}
+      </button>
+    </div>
+  )
+}
+
+// 包裹组件让视图响应数据变化
+export default observer(App)
+```
+:::
+
+
+### 多组件共享数据
+实现步骤：在 Foo 组件和 Bar 组件中分别使用 store 中的数据，然后在 app 组件中进行数据修改，查看 Foo 组件和 Bar 组件是否得到更新
+![多组件共享数据](/mobx-share.png)
+
+:::code-group
+```jsx [Bar.jsx]
+// 用taskStore中的taskList数据
+import { useStore } from './store'
+import { observer } from 'mobx-react-lite'
+
+const Bar = () => {
+  const { taskStore } = useStore()
+  return (
+    <ul>
+      {taskStore.taskList.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  )
+}
+
+export default observer(Bar)
+```
+
+```jsx [Foo.jsx]
+// 用taskStore中的taskList数据
+import { useStore } from './store'
+import { observer } from 'mobx-react-lite'
+
+const Bar = () => {
+  const { taskStore } = useStore()
+  return (
+    <ul>
+      {taskStore.taskList.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  )
+}
+
+export default observer(Foo)
+```
+
+```jsx [App.jsx]
+import Bar from './Bar'
+import Foo from './Foo'
+import { useStore } from './store'
+
+function App() {
+  const { taskStore } = useStore()
+  return (
+    <div className="App">
+      <Bar />
+      <button onClick={() => taskStore.setTaskList('angular')}>
+        修改taskStore
+      </button>
+      <Foo />
+    </div>
+  )
+}
+export default App
+```
+:::
+
+
+## React-redux
+[官方文档](https://react-redux.js.org)
+[中文文档](https://cn.redux.js.org)
+
+### 配置开发环境
+> 使用 create-react-app 创建 react 基础项目，并安装 Redux 相关工具
+
+```bash
+# 创建一个 React 项目
+yarn create vite react-redux --template react
+
+# 安装redux配套工具
+yarn add @reduxjs/toolkit react-redux
+```
+
+### 基础使用
+> 使用 redux 实现一个计数器的案例
+
+#### 创建counterStore
+创建 store 的的核心步骤分为两步
+  1. 使用toolkit的createSlice方法创建一个独立的子模块
+  2. 使用configureStore语法组合子模块
+
+- 创建子模块
+  ```jsx
+    import { createSlice } from '@reduxjs/toolkit'
+
+    const counter = createSlice({
+      // 模块名称独一无二
+      name: 'counter',
+      // 初始数据
+      initialState: {
+        count: 1
+      },
+      // 修改数据的同步方法
+      reducers: {
+        add (state) {
+          state.count++
+        }
+      }
+    })
+
+    const { add } = counter.actions
+    const counterReducer = counter.reducer
+
+    // 导出修改数据的函数
+    export { add }
+    // 导出reducer
+    export default counterReducer
+  ```
+  
+- 组合子模块
+  ```jsx
+    import { configureStore } from '@reduxjs/toolkit'
+
+    import counterReducer from './counterStore'
+
+    export default configureStore({
+      reducer: {
+        // 注册子模块
+        counter: counterReducer
+      }
+    })
+  ```
+
+#### 为React提供Redux store
+  要想让所有的组件都有资格访问 `store` 中的数据，需要我们在入口文件中，渲染根组件的位置通过 `Provider` 提供 `store` 数据。
+```jsx
+  import React from 'react'
+  import ReactDOM from 'react-dom/client'
+  import App from './App'
+
+  // 导入store
+  import store from './store'
+  // 导入store提供组件Provider
+  import { Provider } from 'react-redux'
+
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    // 提供store数据
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
+```
+
+#### 组件使用store中的数据
+> 组件使用 `store` 中的数据需要借助一个 hook 方法，叫做 `useSelector`
+> `useSelector(state => state.模块名)` 方法的返回值为一个对象，对象中包含 `store` 子模块中的所有数据
+
+```jsx
+  import { useSelector } from 'react-redux'
+
+  function App () {
+    // 使用数据
+    const { count } = useSelector(state => state.counter)
+    
+    return (
+      <div className="App">
+        {count}
+        <button onClick={clickHandler}>+</button>
+      </div>
+    )
+  }
+
+  export default App
+```
+
+#### 组件修改store中的数据
+
+修改 `store` 中的数据有俩个核心步骤
+  1. 使用 `counterStore` 模块中导出的 `add` 方法创建 `action` 对象
+  2. 通过 `dispatch` 函数以 `action` 作为参数传入完成数据更新
+
+```jsx
+  import { useSelector, useDispatch } from 'react-redux'
+  import { add } from './store/counterStore'
+
+  function App () {
+    // 使用数据
+    const { count } = useSelector(state => state.counter)
+    // 修改数据
+    const dispatch = useDispatch()
+    const clickHandler = () => {
+      // 1. 生成action对象
+      const action = add()
+      // 2. 提交action进行数据更新
+      dispatch(action)
+    }
+    return (
+      <div className="App">
+        {count}
+        <button onClick={clickHandler}>+</button>
+      </div>
+    )
+  }
+
+  export default App
+```
+
+#### 组件修改数据并传参
+
+1. 修改数据的方法中补充第二个参数 `action`
+```jsx
+  import { createSlice } from "@reduxjs/toolkit"
+
+  const counterStore = createSlice({
+    name: 'counter', // 独一无二不重复的名字语义化
+    // 定义初始化的数据
+    initialState: {
+      taskList: ['react']
+    },
+    reducers: {
+      // action为一个对象 对象中有一个固定的属性叫做payload 为传递过来的参数
+      addTaskList (state, action) {
+        state.taskList.push(action.payload)
+      }
+    }
+  })
+
+// 生成修改数据的方法导出
+const { addTaskList } = counterStore.actions
+export { addTaskList }
+// 生成reducer 导出 供index.js做组合模块
+const counterReducer = counterStore.reducer
+
+export default counterReducer
+```
+
+2. `dispatch` 的时候传入实参
+```jsx
+  <button onClick={() => dispatch(addTaskList('vue'))}>addList</button>
+```
+
+#### Redux异步处理
+:::code-group
+```jsx [channelStore.js]
+import { createSlice } from '@reduxjs/toolkit'
+import axios from 'axios'
+
+const channelStore = createSlice({
+  name: 'channel',
+  initialState: {
+    channelList: []
+  },
+  reducers: {
+    setChannelList (state, action) {
+      state.channelList = action.payload
+    }
+  }
+})
+
+// 创建异步
+const { setChannelList } = channelStore.actions
+const url = 'http://xxx/channels'
+
+// 封装一个函数 在函数中return一个新函数 在新函数中封装异步
+// 得到数据之后通过dispatch函数 触发修改
+const fetchChannelList = () => {
+  return async (dispatch) => {
+    const res = await axios.get(url)
+    dispatch(setChannelList(res.data.data.channels))
+  }
+}
+
+export { fetchChannelList }
+
+const channelReducer = channelStore.reducer
+export default channelReducer
+```
+
+```jsx
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchChannelList } from './store/channelStore'
+
+function App () {
+  // 使用数据
+  const { channelList } = useSelector(state => state.channel)
+  // 修改数据
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchChannelList())
+  }, [dispatch])
+
+  return (
+    <div className="App">
+      <ul>
+        {channelList.map(task => <li key={task.id}>{task.name}</li>)}
+      </ul>
+    </div>
+  )
+}
+
+export default App
+```
+:::
