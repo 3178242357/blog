@@ -19,30 +19,30 @@ hero:
       link: /api-examples
 
 features:
-  - icon: 💡
+  - icon: 🎨
     title: 基础
     details: HTML、CSS、JavaScript
     link: /basic
-  - icon: ⚡️
+  - icon: 📚  
     title: 框架
     details: Vue、React
     link: /frame
-  - icon: 📦
+  - icon: 🧩
     title: 组件库
     details: Element UI、Ant Design、Vant UI、Naive UI
     link: /ui-library
 
-  - icon: 🔑
+  - icon: 📱
+    title: 小程序
+    details: Taro、UniApp
+    link: /mini-program
+  - icon: 💻
     title: 服务端
-    details: Node、Nginx
+    details: Node、Express、Nginx
     link: /server
-  - icon: 🛠️
+  - icon: 🔧
     title: 工具
     details: mock数据、数据转换、动效
     link: /tools
-  - icon: 🔩
-    title: 其他
-    details: 技术分享、现学现用
-    link: /other
 ---
 
