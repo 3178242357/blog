@@ -89,6 +89,7 @@ export default defineConfigWithTheme({
           { text: 'React', link: '/frame/react' }
         ]
       },
+      { text: '小程序', link: '/miniprogram' },
       {
         text: '服务端',
         items: [
