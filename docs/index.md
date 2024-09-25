@@ -35,7 +35,7 @@ features:
   - icon: 📱
     title: 小程序
     details: Taro、UniApp
-    link: /mini-program
+    link: /miniprogram
   - icon: 💻
     title: 服务端
     details: Node、Express、Nginx
