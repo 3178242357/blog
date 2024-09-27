@@ -4,7 +4,7 @@ title: server
 
 ## Node 
 <script setup>
-  import NodeLogo from './components/NodeLogo.vue'
+  import NodeLogo from './components/nodeLogo.vue'
 </script>
 
 <div class="introduce">
