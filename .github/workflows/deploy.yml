@@ -1,6 +1,6 @@
 # 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
 #
-name: Deploy VitePress site to Pages
+name: 构建 Blog
 
 on:
   # 在针对 `main` 分支的推送上运行。如果你
@@ -63,5 +63,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
-        
+        uses: actions/deploy-pages@v4 
