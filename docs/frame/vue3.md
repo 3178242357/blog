@@ -792,8 +792,8 @@ v-model 指令帮我们简化了这一步骤：
 #### 基本用法
 <script setup>
 import { ref } from 'vue'
-import Count from './components/count.vue'
-import Message from './components/message.vue'
+import Count from './components/Count.vue'
+import Message from './components/Message.vue'
 
 const inputValue = ref('')
 const textareaValue = ref('')

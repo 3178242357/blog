@@ -2,7 +2,7 @@
 title: basic
 ---
 
-# HTML
+## HTML
 
 - HTML 指的是超文本标记语言 (HyperText Markup Language)
 - [HTML5](/basic/html) 是 HTML 最新的修订版本，2014 年 10 月由万维网联盟（W3C）完成标准制定，目的是为了在移动设备上支持多媒体。
@@ -24,7 +24,7 @@ title: basic
 </html>
 ```
 
-# CSS
+## CSS
 
 - CSS 指的是层叠样式表 (Cascading Style Sheets)
 - [CSS3](/basic/css) 是 CSS 最新的修订版本，2011 年 12 月由万维网联盟（W3C）完成标准制定，目的是为了增强整个 Web 的表现力和功能。
@@ -35,7 +35,7 @@ div {
 }
 ```
 
-# JavaScript
+## JavaScript
 
 - [JavaScript](/basic/javascript) 是互联网上最流行的脚本语言，这门语言可用于 HTML 和 web，更可广泛用于服务器、PC、笔记本电脑、平板电脑和智能手机等设备。
 - [JavaScript](/basic/javascript) 是一种动态类型、弱类型、基于原型的语言。

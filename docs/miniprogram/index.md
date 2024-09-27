@@ -2,7 +2,7 @@
 title: miniprogram
 ---
 
-# 微信小程序
+## 微信小程序
 
 <div class="introduce">
   <a href="https://developers.weixin.qq.com/miniprogram/dev/framework" target="_blank"><img src="/taro-weapp.png" alt="vue" width="100" height="100"></a>
@@ -11,7 +11,7 @@ title: miniprogram
   </ul>
 </div>
 
-# Taro 
+## Taro 
 
 <div class="introduce">
   <a href="https://docs.taro.zone/docs" target="_blank"><img src="/taro-logo.png" alt="taro" width="100" height="100"></a>
@@ -69,27 +69,30 @@ Taro 3 可以支持转换到 H5、ReactNative 以及任意小程序平台。
   </li>
 </ul>
 
-# UniApp
+## UniApp
 
 <div class="introduce">
   <a href="https://uniapp.dcloud.net.cn" target="_blank"><img src="/uniapp-logo.png" alt="uniapp" width="100" height="100"></a>
   <ul>
     <li> uni-app 是一个使用 Vue.js 开发所有前端应用的框架。</li>
     <li> 开发者编写一套代码，可发布到iOS、Android、Web（响应式）、以及各种小程序（微信/支付宝/百度/头条/飞书/QQ/快手/钉钉/淘宝）、快应用等多个平台。 </li>
-    <li>
-      <img src="/uniapp-platform.png" alt="uniapp-platform">
-    </li>
   </ul>
 </div>
+
+**多端转换支持**
+
+<img src="/uniapp-platform.png" alt="uniapp-platform">
 
 
 <style>
 .introduce {
   display: flex;
+  align-items: center;
+  gap: 20px;
 
   img {
-    margin-right: 20px;
     border: 0 !important;
+    margin: 0 !important;
     max-width: none !important;
   }
 }

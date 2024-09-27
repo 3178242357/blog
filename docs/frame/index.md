@@ -2,7 +2,7 @@
 title: frame
 ---
 
-# Vue 
+## Vue 
 
 <div class="introduce">
   <a href="https://cn.vuejs.org" target="_blank"><img src="/vue.svg" alt="vue" width="100" height="100"></a>
@@ -70,7 +70,7 @@ title: frame
 </html>
 ```
 
-# React
+## React
 
 <div class="introduce">
   <a href="https://zh-hans.react.dev" target="_blank"><img src="/react.png" alt="react" width="100" height="100"></a>
@@ -114,10 +114,12 @@ title: frame
 <style>
 .introduce {
   display: flex;
+  align-items: center;
+  gap: 20px;
 
   img {
-    margin-right: 20px;
     border: 0 !important;
+    margin: 0 !important;
   }
 }
 </style>

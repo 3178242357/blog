@@ -86,7 +86,7 @@ title: ui-library
   gap: 15px;
 
   img {
-    margin-top: 0 !important;
+    margin: 0 !important;
     border: 0 !important;
   }
 }
@@ -159,7 +159,4 @@ title: ui-library
   }
 }
 
-@media (min-width: 640px) {
-  
-}
 </style>

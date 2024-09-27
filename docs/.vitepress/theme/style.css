@@ -51,6 +51,9 @@
   --vp-font-family-mono: 'LXGW WenKai Lite', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
+:root {
+  --nodejs-logo-svg-fill-color: #333;
+}
 
 :root {
   --vp-c-default-1: var(--vp-c-gray-1);
@@ -185,4 +188,8 @@
 
 .vp-doc a {
   text-decoration: none;
+}
+
+.theme-fill {
+  fill: var(--nodejs-logo-svg-fill-color);
 }
