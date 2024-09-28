@@ -5,7 +5,7 @@ titleTemplate: basic
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 # Typescript
@@ -15,7 +15,7 @@ titleTemplate: basic
 > TypeScript 由微软开发的自由和开源的编程语言。<br>
 > TypeScript 设计目标是开发大型应用，它可以编译成纯 JavaScript，编译出来的 JavaScript 可以运行在任何浏览器上。
 
-![TypeScript & JavaScript](/ts&js.png)
+![TypeScript & JavaScript](/assets/ts&js.png)
 
 :::info TypeScript增加的功能：
 - 类型批注和编译时类型检查

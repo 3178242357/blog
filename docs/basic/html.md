@@ -5,7 +5,7 @@ titleTemplate: basic
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 ## HTNL 基础
@@ -135,9 +135,9 @@ titleTemplate: basic
 
 ::: info 示例
   ```html
-  <img src="https://codecompass.cn/background.png" alt="logo" width="100" height="100">
+  <img src="https://codecompass.cn/assets/background.png" alt="logo" width="100" height="100">
   ```
-  <img src="https://codecompass.cn/background.png" alt="logo" width="100" height="100">
+  <img src="https://codecompass.cn/assets/background.png" alt="logo" width="100" height="100">
 
 :::
 
@@ -585,7 +585,7 @@ video 属性在 audio 的基础上增加了：
 | `<section>`    | 定义文档中的节（section、区段）。                              |
 | `<time>`       | 定义日期或时间。                                               |
 | `<wbr>`        | 规定在文本中的何处适合添加换行符。                             |
-![示例](/h5-new-element.png)
+![示例](/assets/h5-new-element.png)
 
 ### HTML5 Web 存储
 > 使用HTML5可以在本地存储用户的浏览数据。早些时候,本地存储使用的是 cookie。但是Web 存储需要更加的安全与快速. 这些数据不会被保存在服务器上，但是这些数据只用于用户请求网站数据上.它也可以存储大量的数据，而不影响网站的性能.

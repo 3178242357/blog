@@ -5,7 +5,7 @@ titleTemplate: frame
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 # Vue3
@@ -1066,7 +1066,7 @@ const vFocus = {
   ```
 
 **完整的指令语法：**
-![指令语法](/directives.png)
+![指令语法](/assets/directives.png)
 
 ### 自定义指令
   > 除了 Vue 内置的一系列指令 (比如 `v-model` 或 `v-show`) 之外，Vue 还允许你注册自定义的指令 (Custom Directives)。
@@ -3170,7 +3170,7 @@ console.log(props.lastNameModifiers) // { uppercase: true }
 
 2. 生命周期图示
 
-  ![生命周期图示](/lifecycle_3.png)
+  ![生命周期图示](/assets/lifecycle_3.png)
 
 
 ## TypeScript
@@ -4953,7 +4953,7 @@ router.go(100)
 
 #### 嵌套命名视图
 
-![嵌套命名视图](/嵌套命名视图.png)
+![嵌套命名视图](/assets/嵌套命名视图.png)
 
   - Nav 只是一个常规组件。
   - UserSettings 是一个视图组件。

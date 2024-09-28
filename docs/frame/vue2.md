@@ -5,7 +5,7 @@ titleTemplate: frame
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 # Vue2
@@ -732,7 +732,7 @@ computed 属性默认只有 `getter` ，不过在需要时你也可以提供一�
 
 2. 生命周期图示
 
-![生命周期图示](/lifecycle_2.png)
+![生命周期图示](/assets/lifecycle_2.png)
 
 
 ### 组件通信

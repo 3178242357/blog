@@ -7,8 +7,8 @@ hero:
   text: "前端知识库"
   tagline: keep working hard and don t give up
   image: 
-    light: /background.png
-    dark: /background.png
+    light: /assets/background.png
+    dark: /assets/background.png
     alt: logo
   actions:
     - theme: brand

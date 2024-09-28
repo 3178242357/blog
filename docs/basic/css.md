@@ -5,7 +5,7 @@ titleTemplate: basic
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 ## CSS 基础
@@ -116,7 +116,7 @@ CSS 选择器是用来选择 HTML 元素的。CSS 选择器有以下几种：
 - `box-sizing`	设置盒模型的尺寸。可选值：`border-box`、`content-box`。 默认值是 `content-box`。
   - `border-box`	使得 width 和 height 包含内边距和边框，而不是内容。
   - `content-box`	使得 width 和 height 只包含内容，不包含内边距和边框。
-![盒模型](/box-model.png)
+![盒模型](/assets/box-model.png)
 说明：
 - Margin(外边距) - 清除边框外的区域，外边距是透明的。
 - Border(边框) - 围绕在内边距和内容外的边框。

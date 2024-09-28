@@ -5,7 +5,7 @@ titleTemplate: basic
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 ## JavaScript 基础
@@ -2398,7 +2398,7 @@ sy === sy1;       // false
   - Map 的键值对个数可以从 size 属性获取，而 Object 的键值对个数只能手动计算。
   - Object 都有自己的原型，原型链上的键名有可能和你自己在对象上的设置的键名产生冲突。
 
-  ![Maps & Objects](/maps&objects.png)
+  ![Maps & Objects](/assets/maps&objects.png)
 
   - Map 中的 key
     - key 是字符串：

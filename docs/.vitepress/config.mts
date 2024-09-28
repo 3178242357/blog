@@ -6,7 +6,7 @@ import escookConfig from '@escook/vitepress-theme/config'
 // https://vitepress.dev/reference/site-config
 export default defineConfigWithTheme({
   extends: escookConfig,
-  head: [['link', { rel: 'icon', href: '/logo_title.svg' }]],
+  head: [['link', { rel: 'icon', href: '/assets/logo_title.svg' }]],
   title: '个人博客',
   titleTemplate: 'Blog by xiaofei',
   // description: "23435",
@@ -27,7 +27,7 @@ export default defineConfigWithTheme({
     },
 
     // logo
-    logo: '/logo.svg',
+    logo: '/assets/logo.svg',
 
     // 搜索
     search: {

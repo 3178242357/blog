@@ -5,7 +5,7 @@ titleTemplate: frame
 #   - - link
 #     - rel: icon
 #       type: image/svg+xml
-#       href: /logo.svg
+#       href: /assets/logo.svg
 ---
 
 # React
@@ -258,10 +258,10 @@ Hook 比普通函数更为严格。你只能在你的组件（或其他 Hook）�
 
 ### 组件间共享数据
 当每个按钮被点击时，只有被点击按钮的 `count` 才会发生改变：
-![数据共享](/react-component-data-sharing-1.png)
+![数据共享](/assets/react-component-data-sharing-1.png)
 
 然而，你经常需要组件 共享数据并一起更新。你需要将各个按钮的 state “向上” 移动到最接近包含所有按钮的组件之中。
-![数据共享](/react-component-data-sharing-2.png)
+![数据共享](/assets/react-component-data-sharing-2.png)
 
 此刻，当你点击任何一个按钮时，`MyApp` 中的 `count` 都将改变，同时会改变 `MyButton` 中的两个 `count`。具体代码如下：
 
@@ -506,7 +506,7 @@ function MyButton({ count, onClick }) {
   ```
 
   4. this问题说明
-  ![this问题说明](/react-this.png)
+  ![this问题说明](/assets/react-this.png)
     
   ```jsx
     class App extends React.Component {
@@ -559,7 +559,7 @@ function MyButton({ count, onClick }) {
 一个前提：在React hook出来之前，函数式组件是没有自己的状态的，所以我们统一通过类组件来讲解
 :::
 
-![react-class-state](/react-class-state.png)
+![react-class-state](/assets/react-class-state.png)
 
 **说明：**
   1. 函数组件：
@@ -1073,13 +1073,13 @@ function MyButton({ count, onClick }) {
 ## React 生命周期
 > 组件的生命周期是指组件从被创建到挂载到页面中运行起来，再到组件不用时卸载的过程。
 **注意：**只有类组件才有生命周期（类组件 实例化  函数组件 不需要实例化）
-![react-lifecycle](/react-lifecycle.png)
+![react-lifecycle](/assets/react-lifecycle.png)
 
 [React 生命周期图示](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram)
 
 ### 生命周期 - 挂载阶段
 在组件实例被创建并插入到dom中时
-![componentDidMount](/lifecycle-didMount.png)
+![componentDidMount](/assets/lifecycle-didMount.png)
 
 | 钩子函数 | 触发时机	| 作用 |
 | ------- | ------- | ---- |
@@ -1113,7 +1113,7 @@ function MyButton({ count, onClick }) {
 
 ### 生命周期 - 更新阶段
 当组件的 `props` 或 `state` 发生变化时
-![componentDidUpdate](/lifecycle-didUpdate.png)
+![componentDidUpdate](/assets/lifecycle-didUpdate.png)
 
 | 钩子函数 | 触发时机	| 作用 |
 | ------- | ------- | ---- |
@@ -1854,7 +1854,7 @@ yarn add  mobx  mobx-react-lite
 ### 基础使用
 > 使用 mobx 实现一个计数器的案例
 
-![mobx-counter案例](/mobx-counter.png)
+![mobx-counter案例](/assets/mobx-counter.png)
 
 #### 初始化 mobx
   1. 定义数据状态 `state`
@@ -2026,7 +2026,7 @@ export default observer(App)
 
 ### 模块化
 > 场景: 一个项目有很多的业务模块，我们不能把所有的代码都写到一起，这样不好维护，提了提供可维护性，需要引入模块化机制
-![模块化](/mobx-module.png)
+![模块化](/assets/mobx-module.png)
 
 实现步骤
   1. 拆分模块js文件，每个模块中定义自己独立的 state/action
@@ -2128,7 +2128,7 @@ export default observer(App)
 
 ### 多组件共享数据
 实现步骤：在 Foo 组件和 Bar 组件中分别使用 store 中的数据，然后在 app 组件中进行数据修改，查看 Foo 组件和 Bar 组件是否得到更新
-![多组件共享数据](/mobx-share.png)
+![多组件共享数据](/assets/mobx-share.png)
 
 :::code-group
 ```jsx [Bar.jsx]

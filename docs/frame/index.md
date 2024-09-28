@@ -5,7 +5,7 @@ title: frame
 ## Vue 
 
 <div class="introduce">
-  <a href="https://cn.vuejs.org" target="_blank"><img src="/vue.svg" alt="vue" width="100" height="100"></a>
+  <a href="https://cn.vuejs.org" target="_blank"><img src="/assets/vue.svg" alt="vue" width="100" height="100"></a>
   <ul>
     <li> Vue (读音 /vjuː/，类似于 view) 是一套用于构建用户界面的<strong>渐进式框架</strong>。</li>
     <li> Vue 只关注视图层， 采用自底向上增量开发的设计。</li>
@@ -73,7 +73,7 @@ title: frame
 ## React
 
 <div class="introduce">
-  <a href="https://zh-hans.react.dev" target="_blank"><img src="/react.png" alt="react" width="100" height="100"></a>
+  <a href="https://zh-hans.react.dev" target="_blank"><img src="/assets/react.png" alt="react" width="100" height="100"></a>
   <ul>
     <li> React 是一个用于构建用户界面的 JavaScript 库。</li>
     <li> React 主要用于构建 UI，很多人认为 React 是 MVC 中的 V（视图）。</li>
