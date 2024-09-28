@@ -3,7 +3,7 @@ title: server
 ---
 
 ## Node 
-<script setup>
+<script>
   import NodeLogo from './components/nodelogo.vue'
 </script>
 
