@@ -3,13 +3,14 @@ title: server
 ---
 
 ## Node 
-<script>
-  import NodeLogo from './components/nodelogo.vue'
+<script setup>
+  import { useData } from 'vitepress'
+  const { isDark } = useData()
 </script>
 
 <div class="introduce">
   <a href="https://nodejs.org/zh-cn" target="_blank">
-    
+    <img :src="isDark ? '/assets/nodejs-light.svg' : '/assets/nodejs-dark.svg'" alt="Node.js">
   </a>
   <ul>
     <li> Node.js® 是一个免费、开源、跨平台的 JavaScript 运行时环境，它让开发人员能够创建服务器、Web 应用、命令行工具和脚本。</li>
@@ -21,5 +22,10 @@ title: server
     display: flex;
     align-items: center;
     gap: 20px;
+
+    img {
+      border: 0 !important;
+      margin: 0 !important;
+    }
   }
 </style>
