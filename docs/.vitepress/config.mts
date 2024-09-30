@@ -74,6 +74,7 @@ export default defineConfigWithTheme({
     sidebar: [
       {
         text: '基础',
+        collapsed: false,
         items: [
           { text: 'HTML', link: '/basic/html' },
           { text: 'CSS', link: '/basic/css' },
@@ -83,6 +84,7 @@ export default defineConfigWithTheme({
       },
       {
         text: '框架',
+        collapsed: false,
         items: [
           { text: 'Vue2', link: '/frame/vue2' },
           { text: 'Vue3', link: '/frame/vue3' },
@@ -92,6 +94,7 @@ export default defineConfigWithTheme({
       { text: '小程序', link: '/miniprogram' },
       {
         text: '服务端',
+        collapsed: false,
         items: [
           { text: 'Node', link: '/server/node' },
           { text: 'Express', link: '/server/express' },
