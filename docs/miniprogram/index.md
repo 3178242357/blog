@@ -11,6 +11,19 @@ title: miniprogram
   </ul>
 </div>
 
+## Vue mini
+<div class="introduce">
+  <a href="https://vuemini.org" target="_blank"><img src="/assets/vuemini.png" alt="vuemini" width="100" height="100"></a>
+  <ul>
+    <li> Vue Mini 是一个基于 Vue 3 的小程序框架，它能让你用组合式 API 写小程序。</li>
+    <li> Vue Mini 仅聚焦于小程序逻辑部分，也就是 JS 部分，它并不影响小程序的模版、样式及配置。 </li>
+  </ul>
+</div>
+
+**支持的平台**
+
+目前 Vue Mini 仅支持微信小程序。虽然技术上 Vue Mini 可以支持其他小程序平台，但由于时间跟精力的限制，短期内并没有这样的计划。未来一段时间 Vue Mini 仍然只会专注于微信小程序，持续提升微信小程序的 UX 以及 DX。
+
 ## Taro 
 
 <div class="introduce">
