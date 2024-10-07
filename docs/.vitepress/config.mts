@@ -52,8 +52,6 @@ export default defineConfigWithTheme({
 
     // 顶部导航
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' },
       {
         text: '组件库',
         items: [
