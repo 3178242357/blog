@@ -13,10 +13,10 @@ hero:
   actions:
     - theme: brand
       text: 开始学习 👉
-      link: /markdown-examples
+      link: /basic
     - theme: alt
       text: 工具
-      link: /api-examples
+      link: /tools
 
 features:
   - icon: 🎨
