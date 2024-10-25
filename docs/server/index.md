@@ -29,7 +29,7 @@ title: server
 
 ## nginx
 <div class="introduce">
-  <a href="https://github.com/nginx/nginx" target="_blank">
+  <a href="https://nginx.org/en/index.html" target="_blank">
     <img src="/assets/nginx.svg" alt="nginx" width="100" height="100">
   </a>
   <ul>
