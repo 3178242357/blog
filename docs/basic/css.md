@@ -519,8 +519,30 @@ CSS动画是指通过某种方式逐渐改变元素的属性，从而使其逼�
 ```
 
 
+## CSS 指南
+
+<div class="introduce">
+  <a href="https://tsejx.github.io/css-guidebook/" target="_blank">
+    <img src="/assets/css-logo.png" alt="echarts" width="100" height="100">
+  </a>
+  <ul>
+    <li> 📚 CSS 知识图谱 新特性、属性、布局、响应式、动画。</li>
+  </ul>
+</div>
 
 
 
+<style>
+  .introduce {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    img {
+      border: 0 !important;
+      margin: 0 !important;
+    }
+  }
+</style>
 
 

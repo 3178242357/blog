@@ -27,10 +27,14 @@ features:
     title: 框架
     details: Vue、React
     link: /frame
-  - icon: 🧩
+  - icon: 📦
     title: 组件库
     details: Element UI、Ant Design、Vant UI、Naive UI
     link: /ui-library
+  - icon: 🧩
+    title: 插件
+    details: Axios、VueUse、Lodash、Moment.js、Mock.js
+    link: /plugins
 
   - icon: 📱
     title: 小程序
