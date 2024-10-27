@@ -38,7 +38,7 @@ title: plugins
     <img src="/assets/mock-logo.svg" alt="Mock.js" width="100" height="100">
   </a>
   <ul>
-    <li> <a href="/plugins/mockjs">Mock.js</a> 是一个生成随机数据，拦截 Ajax 请求。</li>
+    <li> <a href="/plugins/mock">Mock.js</a> 是一个生成随机数据，拦截 Ajax 请求。</li>
   </ul>
 </div>
 
@@ -50,7 +50,7 @@ title: plugins
     <img src="/assets/bootstrap-logo.png" alt="bootstrap.js" width="100" height="100">
   </a>
   <ul>
-    <li> <a href="/plugins/bootstrapjs">Bootstrap.js</a> 简洁、直观、强悍的前端开发框架，让web开发更迅速、简单。</li>
+    <li> <a href="/plugins/bootstrap">Bootstrap.js</a> 简洁、直观、强悍的前端开发框架，让web开发更迅速、简单。</li>
   </ul>
 </div>
 
@@ -62,7 +62,7 @@ title: plugins
     <img src="/assets/lodash-logo.png" alt="lodash.js" width="100" height="100">
   </a>
   <ul>
-    <li> <a href="/plugins/lodashjs">Lodash.js</a> 是一个一致性、模块化、高性能的 JavaScript 实用工具库。</li>
+    <li> <a href="/plugins/lodash">Lodash.js</a> 是一个一致性、模块化、高性能的 JavaScript 实用工具库。</li>
   </ul>
 </div>
 
@@ -134,7 +134,7 @@ title: plugins
     <img :src="isDark ? '/assets/socket.io-logo-light.svg' : '/assets/socket.io-logo-dark.svg'" alt="socket.io" width="100" height="100">
   </a>
   <ul>
-    <li> <a href="/plugins/socket.io">Socket.IO</a> 支持及时、双向与基于事件的交流。它可以在每个平台、每个浏览器和每个设备上工作，可靠性和速度同样稳定。</li>
+    <li> <a href="/plugins/socketio">Socket.IO</a> 支持及时、双向与基于事件的交流。它可以在每个平台、每个浏览器和每个设备上工作，可靠性和速度同样稳定。</li>
   </ul>
 </div>
 
@@ -158,7 +158,7 @@ title: plugins
     <img src="/assets/JsBarcode-logo.svg" alt="JsBarcode" width="100" height="100">
   </a>
   <ul>
-    <li> <a href="/plugins/JsBarcode">JsBarcode</a> 易于使用且功能强大的 Web 和 Node.js 条形码生成器。</li>
+    <li> <a href="/plugins/jsbarcode">JsBarcode</a> 易于使用且功能强大的 Web 和 Node.js 条形码生成器。</li>
   </ul>
 </div>
 
@@ -206,7 +206,7 @@ title: plugins
     <img src="/assets/leafer-ui-logo.svg" alt="leafer-ui" width="100" height="100">
   </a>
   <ul>    
-    <li> <a href="/plugins/leafer-ui">leafer-ui</a> 简洁、开放、现代化的 UI 绘图与交互框架。</li>
+    <li> <a href="/plugins/leaferui">leafer-ui</a> 简洁、开放、现代化的 UI 绘图与交互框架。</li>
   </ul>  
 </div>    
 
