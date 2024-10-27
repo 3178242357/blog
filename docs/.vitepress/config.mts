@@ -63,7 +63,12 @@ export default defineConfigWithTheme({
           { text: 'Vant UI', link: 'https://vant-ui.github.io/vant/#/zh-CN' },
           { text: 'Naive UI', link: 'https://www.naiveui.com/zh-CN/light' },
           { text: 'uView', link: 'https://uviewui.com' },
-          { text: 'Nut UI', link: 'https://nutui.jd.com/' }
+          { text: 'Nut UI', link: 'https://nutui.jd.com/' },
+          {
+            text: 'Vue Amazing UI',
+            link: 'https://themusecatcher.github.io/vue-amazing-ui'
+          },
+          { text: 'Wot Design Uni', link: 'https://wot-design-uni.netlify.app' }
         ]
       }
     ],
