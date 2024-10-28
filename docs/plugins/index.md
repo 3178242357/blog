@@ -10,7 +10,7 @@ title: plugins
 ## Axios
 
 <div class="introduce">
-  <a href="https://dayjs.fenxianglu.cn/" target="_blank">
+  <a href="https://www.axios-http.cn/" target="_blank">
     <img src="/assets/axios-logo.png" alt="axios.js" width="100" height="100">
   </a>
   <ul>
@@ -22,7 +22,7 @@ title: plugins
 ## Day.js
 
 <div class="introduce">
-  <a href="https://www.axios-http.cn/" target="_blank">
+  <a href="https://dayjs.fenxianglu.cn/" target="_blank">
     <img src="/assets/dayjs-logo.png" alt="day.js" width="100" height="100">
   </a>
   <ul>

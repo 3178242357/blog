@@ -1,5 +1,5 @@
 ---
-title: Socket.io 
+title: dayjs 
 titleTemplate: plugins
 # head:
 #   - - link
@@ -8,4 +8,4 @@ titleTemplate: plugins
 #       href: /assets/logo.svg
 ---
 
-# Socket.io
+# Day.js
