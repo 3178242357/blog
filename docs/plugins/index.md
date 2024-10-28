@@ -10,11 +10,23 @@ title: plugins
 ## Axios
 
 <div class="introduce">
-  <a href="https://www.axios-http.cn/" target="_blank">
+  <a href="https://dayjs.fenxianglu.cn/" target="_blank">
     <img src="/assets/axios-logo.png" alt="axios.js" width="100" height="100">
   </a>
   <ul>
     <li> <a href="/plugins/axios">axios.js</a> 是一个基于 promise 的网络请求库，可以用于浏览器和 node.js。</li>
+  </ul>
+</div>
+
+
+## Day.js
+
+<div class="introduce">
+  <a href="https://www.axios-http.cn/" target="_blank">
+    <img src="/assets/dayjs-logo.png" alt="day.js" width="100" height="100">
+  </a>
+  <ul>
+    <li> <a href="/plugins/dayjs">Day.js</a> 是一个极简的JavaScript库，可以为现代浏览器解析、验证、操作和显示日期和时间。</li>
   </ul>
 </div>
 

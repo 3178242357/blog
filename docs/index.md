@@ -33,7 +33,7 @@ features:
     link: /ui-library
   - icon: 🧩
     title: 插件
-    details: Axios、VueUse、Lodash、Moment.js、Mock.js
+    details: Axios、VueUse、Lodash、Day.js、Mock.js
     link: /plugins
 
   - icon: 📱
@@ -46,7 +46,7 @@ features:
     link: /server
   - icon: 🔧
     title: 工具
-    details: mock数据、数据转换、动效
+    details: 数据格式转换
     link: /tools
 ---
 
